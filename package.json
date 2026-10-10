@@ -1,0 +1,9 @@
+{
+  "name": "findit",
+  "version": "1.0.0",
+  "description": "FindIT - Smart Campus Lost & Found System (React + Java)",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build"
+  }
+}

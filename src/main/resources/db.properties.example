@@ -1,0 +1,6 @@
+# FindIT - Database Configuration Template
+# Copy this file to db.properties and set your credentials:
+
+db.url=jdbc:mysql://localhost:3306/findit_db?useSSL=false&serverTimezone=Asia/Kolkata&allowPublicKeyRetrieval=true
+db.username=root
+db.password=root

@@ -1,0 +1,25 @@
+# Maven build artifacts
+target/
+*.class
+
+# Node / React
+node_modules/
+frontend/node_modules/
+frontend/dist/
+.vite/
+*.log
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+.settings/
+
+# Local database properties (copy db.properties.example to db.properties)
+src/main/resources/db.properties
+
+# OS files
+.DS_Store
+Thumbs.db
