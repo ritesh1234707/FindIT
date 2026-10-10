@@ -164,7 +164,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4F46E5, #06B6D4);
+  background: linear-gradient(135deg, #059669, #06B6D4);
   color: white;
   font-weight: 700;
   font-size: 14px;
@@ -184,7 +184,7 @@
 .user-role-badge {
   font-size: 10px;
   font-weight: 700;
-  color: var(--accent-cyan);
+  color: #34D399;
   letter-spacing: 0.5px;
 }
 .user-role-badge.admin {
@@ -207,7 +207,7 @@
   align-items: center;
   padding: 36px 44px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, rgba(30, 27, 75, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%);
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.16) 0%, rgba(15, 23, 42, 0.75) 100%);
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-card);
   margin-bottom: 24px;
@@ -216,9 +216,9 @@
   display: inline-block;
   padding: 4px 12px;
   border-radius: var(--radius-full);
-  background: var(--primary-gradient-subtle);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  color: #818CF8;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34D399;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -672,10 +672,10 @@
   align-items: center;
   justify-content: center;
 }
-.stat-icon-wrapper.purple { background: rgba(99, 102, 241, 0.15); color: #818CF8; }
+.stat-icon-wrapper.purple { background: rgba(16, 185, 129, 0.15); color: #34D399; }
 .stat-icon-wrapper.rose   { background: rgba(244, 63, 94, 0.15);  color: #FB7185; }
 .stat-icon-wrapper.cyan   { background: rgba(6, 182, 212, 0.15);  color: #38BDF8; }
-.stat-icon-wrapper.emerald{ background: rgba(16, 185, 129, 0.15); color: #34D399; }
+.stat-icon-wrapper.emerald{ background: rgba(5, 150, 105, 0.2);   color: #10B981; }
 .stat-content {
   display: flex;
   flex-direction: column;
@@ -714,7 +714,7 @@
 }
 .meter-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #6366F1, #10B981);
+  background: linear-gradient(90deg, #059669, #10B981, #06B6D4);
   border-radius: var(--radius-full);
   transition: width 0.6s ease;
 }

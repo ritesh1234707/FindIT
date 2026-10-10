@@ -12,19 +12,19 @@
 
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-medium: rgba(255, 255, 255, 0.16);
-  --border-highlight: rgba(99, 102, 241, 0.45);
+  --border-highlight: rgba(16, 185, 129, 0.45);
 
-  /* Gradients & Accents */
-  --primary: #6366F1;
-  --primary-hover: #4F46E5;
-  --primary-glow: rgba(99, 102, 241, 0.4);
-  --primary-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
-  --primary-gradient-subtle: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+  /* Gradients & Accents (Emerald / Mint / Cyan Palette) */
+  --primary: #10B981;
+  --primary-hover: #059669;
+  --primary-glow: rgba(16, 185, 129, 0.4);
+  --primary-gradient: linear-gradient(135deg, #059669 0%, #10B981 50%, #06B6D4 100%);
+  --primary-gradient-subtle: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
 
   --accent-cyan: #06B6D4;
   --accent-cyan-glow: rgba(6, 182, 212, 0.35);
   --accent-emerald: #10B981;
-  --accent-emerald-glow: rgba(16, 185, 129, 0.3);
+  --accent-emerald-glow: rgba(16, 185, 129, 0.35);
   --accent-rose: #F43F5E;
   --accent-rose-glow: rgba(244, 63, 94, 0.3);
   --accent-amber: #F59E0B;
@@ -65,28 +65,28 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Ambient Radial Glows */
+/* Ambient Radial Glows (Emerald & Cyan) */
 .ambient-glow {
   position: fixed;
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
-  filter: blur(130px);
-  opacity: 0.45;
+  filter: blur(140px);
+  opacity: 0.42;
 }
 .glow-top-left {
   width: 650px;
   height: 650px;
   top: -220px;
   left: -160px;
-  background: radial-gradient(circle, #4338CA 0%, rgba(99, 102, 241, 0) 70%);
+  background: radial-gradient(circle, #059669 0%, rgba(16, 185, 129, 0) 70%);
 }
 .glow-bottom-right {
   width: 750px;
   height: 750px;
   bottom: -220px;
   right: -220px;
-  background: radial-gradient(circle, #0E7490 0%, rgba(6, 182, 212, 0) 70%);
+  background: radial-gradient(circle, #0891B2 0%, rgba(6, 182, 212, 0) 70%);
 }
 
 .app-root {
@@ -95,6 +95,39 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Floating background geometric accents matching the login theme */
+.app-root::before {
+  content: '';
+  position: fixed;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: #FBBF24;
+  opacity: 0.22;
+  bottom: -60px;
+  left: 4%;
+  filter: blur(40px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.app-root::after {
+  content: '';
+  position: fixed;
+  width: 340px;
+  height: 340px;
+  background: #F43F5E;
+  opacity: 0.18;
+  top: -80px;
+  right: 3%;
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+  transform: rotate(25deg);
+  filter: blur(45px);
+  z-index: 0;
+  pointer-events: none;
 }
 
 .glass-panel {
