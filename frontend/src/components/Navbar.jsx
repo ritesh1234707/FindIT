@@ -7,7 +7,8 @@ export default function Navbar({
   users,
   currentUser,
   onSelectUser,
-  stats
+  stats,
+  onLogout
 }) {
   const activeItemsCount = (stats?.totalLost || 0) + (stats?.totalFound || 0);
   const recoveryRate = stats?.recoveryRate || 0;
@@ -109,6 +110,15 @@ export default function Navbar({
             </span>
           </div>
         </div>
+
+        <button
+          type="button"
+          className="btn-icon"
+          onClick={onLogout}
+          title="Sign Out"
+        >
+          <LogOut size={16} />
+        </button>
       </div>
     </header>
   );

@@ -7,12 +7,24 @@ import MyActivityView from './components/MyActivityView';
 import AdminHubView from './components/AdminHubView';
 import ClaimModal from './components/ClaimModal';
 import ItemDetailsModal from './components/ItemDetailsModal';
+import AuthScreen from './components/AuthScreen';
 import './App.css';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('feed');
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('findit_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [currentView, setCurrentView] = useState(() => {
+    return currentUser?.role === 'ADMIN' ? 'admin' : 'feed';
+  });
+
   const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
   const [items, setItems] = useState([]);
   const [matches, setMatches] = useState([]);
   const [myItems, setMyItems] = useState([]);
@@ -46,12 +58,6 @@ export default function App() {
 
         if (usersRes.users) {
           setUsers(usersRes.users);
-          const savedId = localStorage.getItem('findit_userId');
-          const initialUser =
-            usersRes.users.find(u => u.userId === parseInt(savedId)) ||
-            usersRes.users[1] ||
-            usersRes.users[0];
-          setCurrentUser(initialUser);
         }
 
         if (statsRes.stats) {
@@ -64,16 +70,17 @@ export default function App() {
     init();
   }, []);
 
-  // 2. Fetch Data whenever user or view changes
+  // 2. Fetch Data whenever user changes
   useEffect(() => {
+    if (!currentUser) return;
+
     loadItems();
     loadStats();
-    if (currentUser) {
-      loadMatches();
-      loadUserActivity();
-      if (currentUser.role === 'ADMIN') {
-        loadAllClaims();
-      }
+    loadMatches();
+    loadUserActivity();
+
+    if (currentUser.role === 'ADMIN') {
+      loadAllClaims();
     }
   }, [currentUser]);
 
@@ -132,11 +139,28 @@ export default function App() {
     }
   }
 
+  // Handle Login Success from AuthScreen
+  function handleLoginSuccess(user) {
+    setCurrentUser(user);
+    localStorage.setItem('findit_user', JSON.stringify(user));
+    setCurrentView(user.role === 'ADMIN' ? 'admin' : 'feed');
+    showToast(`Welcome back, ${user.fullName}!`, 'success');
+  }
+
+  // Handle Logout
+  function handleLogout() {
+    setCurrentUser(null);
+    localStorage.removeItem('findit_user');
+    showToast('Signed out successfully.', 'info');
+  }
+
   function handleSelectUser(user) {
     setCurrentUser(user);
-    localStorage.setItem('findit_userId', user.userId);
+    localStorage.setItem('findit_user', JSON.stringify(user));
     showToast(`Switched account to: ${user.fullName} (${user.role})`, 'success');
-    if (user.role !== 'ADMIN' && currentView === 'admin') {
+    if (user.role === 'ADMIN') {
+      setCurrentView('admin');
+    } else if (currentView === 'admin') {
       setCurrentView('feed');
     }
   }
@@ -201,6 +225,26 @@ export default function App() {
     }
   }
 
+  // ── GATEKEEPER: If not logged in, render the Auth Screen ─────────
+  if (!currentUser) {
+    return (
+      <div className="app-root">
+        <div className="ambient-glow glow-top-left" />
+        <div className="ambient-glow glow-bottom-right" />
+        <AuthScreen onLoginSuccess={handleLoginSuccess} />
+        <div className="toast-container">
+          {toasts.map(t => (
+            <div key={t.id} className={`toast ${t.type}`}>
+              <strong>{t.type === 'success' ? '✓' : t.type === 'error' ? '✗' : 'ℹ'}</strong>
+              <span>{t.message}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ── AUTHENTICATED DASHBOARD ─────────────────────────────────────
   return (
     <div className="app-root">
       {/* Background Ambient Glows */}
@@ -215,6 +259,7 @@ export default function App() {
         currentUser={currentUser}
         onSelectUser={handleSelectUser}
         stats={stats}
+        onLogout={handleLogout}
       />
 
       {/* Main Content Router */}
