@@ -22,7 +22,7 @@ export default function Navbar({
           </div>
           <div className="brand-text">
             <span className="brand-name">Find<span className="highlight">IT</span></span>
-            <span className="brand-tag">Campus Recovery Engine</span>
+            <span className="brand-subtitle">Campus Recovery Engine</span>
           </div>
         </div>
 

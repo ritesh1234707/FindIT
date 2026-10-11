@@ -430,7 +430,7 @@ export default function FeedView({
                         {item.color}
                       </span>
                     )}
-                    {item.brand && <span className="tag brand-tag">{item.brand}</span>}
+                    {item.brand && <span className="tag item-brand-pill">{item.brand}</span>}
                   </div>
 
                   {/* Description snippet */}
