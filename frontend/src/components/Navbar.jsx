@@ -10,114 +10,86 @@ export default function Navbar({
   stats,
   onLogout
 }) {
-  const activeItemsCount = (stats?.totalLost || 0) + (stats?.totalFound || 0);
-  const recoveryRate = stats?.recoveryRate || 0;
-
   return (
     <header className="navbar">
+      {/* Brand Logo matching Reunited. style */}
       <div className="nav-left">
         <div className="brand" onClick={() => onSwitchView('feed')}>
-          <div className="brand-icon">
-            <Search size={22} strokeWidth={2.5} />
-          </div>
-          <div className="brand-text">
-            <span className="brand-name">Find<span className="highlight">IT</span></span>
-            <span className="brand-subtitle">Campus Recovery Engine</span>
-          </div>
-        </div>
-
-        <div className="quick-stats-ticker">
-          <span className="ticker-pill">
-            <strong>{activeItemsCount}</strong> Active Items
-          </span>
-          <span className="ticker-pill success">
-            <strong>{recoveryRate}%</strong> Recovery Rate
-          </span>
+          <span className="brand-wordmark">FindIT<span className="brand-dot">.</span></span>
         </div>
       </div>
 
+      {/* Clean Nav Links */}
       <nav className="nav-center">
         <button
-          className={`nav-btn ${currentView === 'feed' ? 'active' : ''}`}
+          className={`nav-link ${currentView === 'feed' ? 'active' : ''}`}
           onClick={() => onSwitchView('feed')}
         >
-          <Search size={16} />
-          <span>Browse Feed</span>
+          Search Items
         </button>
 
         <button
-          className={`nav-btn ${currentView === 'report' ? 'active' : ''}`}
+          className={`nav-link ${currentView === 'report' ? 'active' : ''}`}
           onClick={() => onSwitchView('report')}
         >
-          <PlusCircle size={16} />
-          <span>Report Item</span>
+          Report Item
         </button>
 
         <button
-          className={`nav-btn ${currentView === 'matches' ? 'active' : ''}`}
+          className={`nav-link ${currentView === 'matches' ? 'active' : ''}`}
           onClick={() => onSwitchView('matches')}
         >
-          <Zap size={16} />
-          <span>Smart Matches</span>
+          Smart Matches
         </button>
 
         <button
-          className={`nav-btn ${currentView === 'my-items' ? 'active' : ''}`}
+          className={`nav-link ${currentView === 'my-items' ? 'active' : ''}`}
           onClick={() => onSwitchView('my-items')}
         >
-          <FileText size={16} />
-          <span>My Activity</span>
+          Claim Log
         </button>
 
         {currentUser?.role === 'ADMIN' && (
           <button
-            className={`nav-btn ${currentView === 'admin' ? 'active' : ''}`}
+            className={`nav-link ${currentView === 'admin' ? 'active' : ''}`}
             onClick={() => onSwitchView('admin')}
           >
-            <Shield size={16} />
-            <span>Admin Hub</span>
+            Admin Hub
           </button>
         )}
       </nav>
 
+      {/* Right: Clean profile & demo switch */}
       <div className="nav-right">
-        <div className="role-switcher-dropdown">
-          <span className="role-switcher-label">Demo Switch:</span>
+        <div className="demo-switch-wrap">
           <select
-            className="quick-user-select"
+            className="clean-select demo-select"
             value={currentUser?.userId || ''}
             onChange={(e) => {
               const selected = users.find(u => u.userId === parseInt(e.target.value));
               if (selected) onSelectUser(selected);
             }}
+            title="Switch demo account"
           >
             {users.map(u => (
               <option key={u.userId} value={u.userId}>
-                {u.fullName} ({u.role})
+                {u.fullName.split(' ')[0]} ({u.role})
               </option>
             ))}
           </select>
         </div>
 
-        <div className="user-profile-badge">
-          <div className="user-avatar">
-            {(currentUser?.fullName || 'U').charAt(0).toUpperCase()}
-          </div>
-          <div className="user-info">
-            <span className="user-name">{currentUser?.fullName || 'Guest'}</span>
-            <span className={`user-role-badge ${currentUser?.role?.toLowerCase()}`}>
-              {currentUser?.role || 'STUDENT'}
-            </span>
-          </div>
+        <div className="user-pill">
+          <span className="user-name">{currentUser?.fullName?.split(' ')[0] || 'User'}</span>
         </div>
 
         <button
           type="button"
-          className="btn-icon"
+          className="btn-ghost-logout"
           onClick={onLogout}
           title="Sign Out"
         >
-          <LogOut size={16} />
+          <LogOut size={15} />
         </button>
       </div>
     </header>

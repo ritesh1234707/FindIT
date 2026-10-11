@@ -247,9 +247,6 @@ export default function App() {
   // ── AUTHENTICATED DASHBOARD ─────────────────────────────────────
   return (
     <div className="app-root">
-      {/* Background Ambient Glows */}
-      <div className="ambient-glow glow-top-left" />
-      <div className="ambient-glow glow-bottom-right" />
 
       {/* Top Navbar */}
       <Navbar

@@ -1,21 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Search,
-  MapPin,
-  PlusCircle,
-  Zap,
-  Tag,
-  Calendar,
-  User,
-  CheckCircle,
-  RefreshCw,
-  X,
-  ArrowRight,
-  Sparkles,
-  Filter,
-  Eye,
-  AlertCircle
-} from 'lucide-react';
+import { Search, MapPin, PlusCircle, ArrowUpRight, Zap, Check } from 'lucide-react';
 
 export default function FeedView({
   items = [],
@@ -25,50 +9,15 @@ export default function FeedView({
   currentUser,
   onSwitchView,
   onOpenClaimModal,
-  onOpenDetailsModal,
-  onRefreshItems
+  onOpenDetailsModal
 }) {
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
-  const [selectedLocation, setSelectedLocation] = useState('ALL');
-  const [selectedStatus, setSelectedStatus] = useState('OPEN');
-  const [sortBy, setSortBy] = useState('newest');
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  // Dynamic Metrics
-  const openLostCount = useMemo(() => {
-    return items.filter(i => i.reportType === 'LOST' && i.status === 'OPEN').length;
-  }, [items]);
-
-  const openFoundCount = useMemo(() => {
-    return items.filter(i => i.reportType === 'FOUND' && i.status === 'OPEN').length;
-  }, [items]);
-
-  const myReportsCount = useMemo(() => {
-    return myItems?.length || items.filter(i => i.userId === currentUser?.userId).length;
-  }, [myItems, items, currentUser]);
-
-  const recoveryRate = stats?.recoveryRate || 0;
-
-  // Distinct locations from active items
-  const campusLocations = useMemo(() => {
-    const defaultLocs = [
-      'Central Library',
-      'Main Canteen',
-      'Engineering Block A',
-      'Science Block B',
-      'Sports Complex',
-      'Auditorium',
-      'Computer Lab'
-    ];
-    const itemLocs = items.map(i => i.location).filter(Boolean);
-    const combined = Array.from(new Set([...defaultLocs, ...itemLocs]));
-    return combined.sort();
-  }, [items]);
 
   // Categories list
   const categories = [
+    'ALL',
     'ID Card',
     'Earbuds / Headphones',
     'Phone / Electronics',
@@ -81,64 +30,43 @@ export default function FeedView({
     'Other'
   ];
 
-  // Filtering & Sorting
+  // Map category to a tasteful subtle icon/emoji placeholder
+  function getCategoryVisual(category, title = '') {
+    const c = (category || '').toLowerCase();
+    const t = (title || '').toLowerCase();
+    if (c.includes('earbud') || c.includes('headphone') || t.includes('jbl') || t.includes('bud')) return '🎧';
+    if (c.includes('phone') || c.includes('electronic')) return '📱';
+    if (c.includes('id') || c.includes('card')) return '🪪';
+    if (c.includes('bag') || c.includes('backpack')) return '🎒';
+    if (c.includes('calculator')) return '🔢';
+    if (c.includes('water') || c.includes('bottle')) return '🍶';
+    if (c.includes('key')) return '🔑';
+    if (c.includes('wallet') || c.includes('purse')) return '👛';
+    if (c.includes('book') || c.includes('notes')) return '📖';
+    if (t.includes('watch')) return '⌚';
+    if (t.includes('cap') || t.includes('hat')) return '🧢';
+    return '📦';
+  }
+
+  // Filtered Items (clean and fast)
   const filteredItems = useMemo(() => {
-    return items
-      .filter(item => {
-        // Type match
-        if (selectedType !== 'ALL' && item.reportType !== selectedType) return false;
-        // Category match
-        if (selectedCategory !== 'ALL' && item.category !== selectedCategory) return false;
-        // Location match
-        if (selectedLocation !== 'ALL' && !item.location?.toLowerCase().includes(selectedLocation.toLowerCase())) {
-          return false;
-        }
-        // Status match
-        if (selectedStatus !== 'ALL' && item.status !== selectedStatus) return false;
-        // Search match
-        if (search.trim()) {
-          const q = search.toLowerCase();
-          const inTitle = item.title?.toLowerCase().includes(q);
-          const inDesc  = item.description?.toLowerCase().includes(q);
-          const inLoc   = item.location?.toLowerCase().includes(q);
-          const inBrand = item.brand?.toLowerCase().includes(q);
-          const inColor = item.color?.toLowerCase().includes(q);
-          const inRep   = item.reporterName?.toLowerCase().includes(q);
-          if (!inTitle && !inDesc && !inLoc && !inBrand && !inColor && !inRep) return false;
-        }
-        return true;
-      })
-      .sort((a, b) => {
-        if (sortBy === 'newest') return (b.itemId || 0) - (a.itemId || 0);
-        if (sortBy === 'oldest') return (a.itemId || 0) - (b.itemId || 0);
-        if (sortBy === 'title')  return (a.title || '').localeCompare(b.title || '');
-        return 0;
-      });
-  }, [items, selectedType, selectedCategory, selectedLocation, selectedStatus, search, sortBy]);
-
-  const hasActiveFilters = Boolean(
-    search.trim() ||
-    selectedType !== 'ALL' ||
-    selectedCategory !== 'ALL' ||
-    selectedLocation !== 'ALL' ||
-    selectedStatus !== 'OPEN'
-  );
-
-  function resetFilters() {
-    setSearch('');
-    setSelectedType('ALL');
-    setSelectedCategory('ALL');
-    setSelectedLocation('ALL');
-    setSelectedStatus('OPEN');
-    setSortBy('newest');
-  }
-
-  async function handleRefresh() {
-    if (!onRefreshItems) return;
-    setIsRefreshing(true);
-    await onRefreshItems();
-    setTimeout(() => setIsRefreshing(false), 500);
-  }
+    return items.filter(item => {
+      // Type filter
+      if (selectedType !== 'ALL' && item.reportType !== selectedType) return false;
+      // Category filter
+      if (selectedCategory !== 'ALL' && item.category !== selectedCategory) return false;
+      // Search
+      if (search.trim()) {
+        const q = search.toLowerCase();
+        const inTitle = item.title?.toLowerCase().includes(q);
+        const inDesc  = item.description?.toLowerCase().includes(q);
+        const inLoc   = item.location?.toLowerCase().includes(q);
+        const inBrand = item.brand?.toLowerCase().includes(q);
+        if (!inTitle && !inDesc && !inLoc && !inBrand) return false;
+      }
+      return true;
+    });
+  }, [items, selectedType, selectedCategory, search]);
 
   function formatDate(dStr) {
     if (!dStr) return 'Recently';
@@ -146,7 +74,7 @@ export default function FeedView({
       const parts = dStr.split('-');
       if (parts.length === 3) {
         const date = new Date(parts[0], parts[1] - 1, parts[2]);
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       }
       return dStr;
     } catch {
@@ -154,241 +82,105 @@ export default function FeedView({
     }
   }
 
-  const firstName = currentUser?.fullName ? currentUser.fullName.split(' ')[0] : 'Student';
-
   return (
     <div className="view-panel active animate-fade-in">
 
-      {/* ── 1. STUDENT WELCOME & HERO PANEL ─────────────────────────────── */}
-      <div className="hero-section">
-        <div className="hero-content">
-          <div className="hero-badge">
-            <Sparkles size={12} style={{ display: 'inline', marginRight: 5, verticalAlign: 'middle' }} />
-            Campus Lost &amp; Found Portal
-          </div>
-          <h1 className="hero-title">
-            Hello, {firstName}! 👋 <br />
-            <span className="gradient-text">Recover What You Lost. Return What You Found.</span>
+      {/* ── Editorial Hero Section (Inspired by Reunited.) ── */}
+      <section className="editorial-hero">
+        <div className="hero-text-block">
+          <h1 className="editorial-headline">
+            How you get it <em>back</em>.
           </h1>
-          <p className="hero-subtitle">
-            FindIT uses keyword cross-indexing and category matching to quickly reunite students
-            with lost campus belongings. Browse live reports below or file a report in 60 seconds.
+          <p className="editorial-description">
+            Left behind in a classroom, on the field, or at the library — staff collect it, or whoever finds it logs it here. Every item is verified and securely restored.
           </p>
-
-          <div className="hero-cta-group" style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 22 }}>
+          <div className="editorial-actions">
             <button className="btn btn-primary" onClick={() => onSwitchView('report')}>
-              <PlusCircle size={16} />
-              <span>Report an Item</span>
+              Report an Item <ArrowUpRight size={15} />
             </button>
             <button className="btn btn-secondary" onClick={() => onSwitchView('matches')}>
-              <Zap size={16} />
-              <span>Smart Matches {matches.length > 0 && `(${matches.length})`}</span>
-            </button>
-            <button className="btn btn-secondary" onClick={() => onSwitchView('my-items')}>
-              <User size={16} />
-              <span>My Activity ({myReportsCount})</span>
+              <Zap size={14} /> Smart Matches {matches.length > 0 && `(${matches.length})`}
             </button>
           </div>
         </div>
+      </section>
 
-        {/* Hero Quick Metrics Badges */}
-        <div className="hero-stats-capsule">
-          <div className="stat-capsule-item">
-            <span className="capsule-val">{openLostCount}</span>
-            <span className="capsule-lbl">Open Lost</span>
-          </div>
-          <div className="capsule-divider" />
-          <div className="stat-capsule-item">
-            <span className="capsule-val">{openFoundCount}</span>
-            <span className="capsule-lbl">Open Found</span>
-          </div>
-          <div className="capsule-divider" />
-          <div className="stat-capsule-item">
-            <span className="capsule-val">{recoveryRate}%</span>
-            <span className="capsule-lbl">Recovery</span>
-          </div>
-        </div>
-      </div>
-
-      {/* ── 2. SMART MATCH NOTIFICATION CALLOUT (IF ANY) ──────────────────── */}
-      {matches.length > 0 && (
-        <div className="match-callout-banner animate-fade-in" onClick={() => onSwitchView('matches')}>
-          <div className="callout-left">
-            <div className="callout-icon">
-              <Zap size={20} />
-            </div>
-            <div>
-              <strong>{matches.length} Potential Smart Match{matches.length > 1 ? 'es' : ''} Detected!</strong>
-              <p>Our heuristic algorithm found potential matches between open reports and your items.</p>
-            </div>
-          </div>
-          <button className="btn btn-sm btn-primary">
-            Review Matches <ArrowRight size={14} />
-          </button>
-        </div>
-      )}
-
-      {/* ── 3. ADVANCED SEARCH & MULTI-FILTER SUITE ───────────────────────── */}
-      <div className="feed-filters-bar glass-panel">
-        {/* Search input with live clear */}
-        <div className="search-box">
-          <Search size={18} />
+      {/* ── Minimalist, Uncluttered Search & Filter Strip ── */}
+      <div className="minimal-filter-strip">
+        <div className="clean-search-box">
+          <Search size={16} className="search-icon" />
           <input
             type="text"
-            placeholder="Search items by title, brand, description, location..."
+            placeholder="Search by item, location, or brand..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           {search && (
-            <button
-              type="button"
-              className="clear-search-btn"
-              onClick={() => setSearch('')}
-              title="Clear search"
-            >
-              <X size={14} />
+            <button type="button" className="clear-btn" onClick={() => setSearch('')}>
+              &times;
             </button>
           )}
         </div>
 
-        {/* Report Type Switcher Buttons */}
-        <div className="type-filter-group">
+        <div className="minimal-segmented-toggle">
           <button
             type="button"
-            className={`type-filter-btn ${selectedType === 'ALL' ? 'active' : ''}`}
+            className={`segment-btn ${selectedType === 'ALL' ? 'active' : ''}`}
             onClick={() => setSelectedType('ALL')}
           >
-            All ({items.length})
+            All Items
           </button>
           <button
             type="button"
-            className={`type-filter-btn ${selectedType === 'LOST' ? 'active' : ''}`}
+            className={`segment-btn ${selectedType === 'LOST' ? 'active' : ''}`}
             onClick={() => setSelectedType('LOST')}
           >
-            🔴 Lost
+            Lost
           </button>
           <button
             type="button"
-            className={`type-filter-btn ${selectedType === 'FOUND' ? 'active' : ''}`}
+            className={`segment-btn ${selectedType === 'FOUND' ? 'active' : ''}`}
             onClick={() => setSelectedType('FOUND')}
           >
-            🟢 Found
+            Found
           </button>
         </div>
 
-        {/* Category Filter */}
         <select
-          className="filter-select"
+          className="clean-select category-select"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
         >
-          <option value="ALL">All Categories</option>
-          {categories.map(cat => (
-            <option key={cat} value={cat}>{cat}</option>
+          {categories.map(c => (
+            <option key={c} value={c}>
+              {c === 'ALL' ? 'All Categories' : c}
+            </option>
           ))}
         </select>
-
-        {/* Campus Location Filter */}
-        <select
-          className="filter-select"
-          value={selectedLocation}
-          onChange={(e) => setSelectedLocation(e.target.value)}
-        >
-          <option value="ALL">All Locations</option>
-          {campusLocations.map(loc => (
-            <option key={loc} value={loc}>{loc}</option>
-          ))}
-        </select>
-
-        {/* Status Filter */}
-        <select
-          className="filter-select"
-          value={selectedStatus}
-          onChange={(e) => setSelectedStatus(e.target.value)}
-        >
-          <option value="ALL">All Statuses</option>
-          <option value="OPEN">Available (Open)</option>
-          <option value="CLAIM_PENDING">Claim Pending</option>
-          <option value="CLAIMED">Claimed</option>
-          <option value="RETURNED">Returned</option>
-        </select>
-
-        {/* Sort selector */}
-        <select
-          className="filter-select"
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          title="Sort items"
-        >
-          <option value="newest">Sort: Newest First</option>
-          <option value="oldest">Sort: Oldest First</option>
-          <option value="title">Sort: Title (A-Z)</option>
-        </select>
-
-        {/* Reset Filters & Refresh Action */}
-        {hasActiveFilters && (
-          <button
-            type="button"
-            className="btn btn-sm btn-secondary reset-filter-btn"
-            onClick={resetFilters}
-          >
-            <X size={13} /> Reset
-          </button>
-        )}
-
-        <button
-          type="button"
-          className="btn btn-sm btn-secondary refresh-feed-btn"
-          onClick={handleRefresh}
-          title="Refresh Feed"
-          disabled={isRefreshing}
-        >
-          <RefreshCw size={13} className={isRefreshing ? 'spin-anim' : ''} />
-        </button>
       </div>
 
-      {/* ── 4. ITEMS GRID HEADER ────────────────────────────────────────── */}
-      <div className="items-grid-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <strong>Showing {filteredItems.length} {filteredItems.length === 1 ? 'item' : 'items'}</strong>
-          {hasActiveFilters && (
-            <span style={{ fontSize: '12px', color: 'var(--card-text-muted)' }}>
-              (Filtered from {items.length} total)
-            </span>
-          )}
-        </div>
-
-        <div style={{ display: 'flex', gap: '12px', fontSize: '12px' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#EF4444' }} />
-            Lost: {items.filter(i => i.reportType === 'LOST').length}
-          </span>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981' }} />
-            Found: {items.filter(i => i.reportType === 'FOUND').length}
-          </span>
-        </div>
+      {/* ── Feed Count Header ── */}
+      <div className="clean-feed-header">
+        <span className="count-label">
+          Showing {filteredItems.length} {filteredItems.length === 1 ? 'item' : 'items'}
+        </span>
       </div>
 
-      {/* ── 5. ITEMS GRID ───────────────────────────────────────────────── */}
-      <div className="items-grid">
+      {/* ── Refined Editorial Cards Grid ── */}
+      <div className="editorial-cards-grid">
         {filteredItems.length === 0 ? (
-          <div className="feed-empty-state glass-panel">
-            <div className="empty-icon-bubble">🔍</div>
-            <h3>No items matched your current filters</h3>
-            <p>
-              Try clearing your search query, changing the campus location, or setting the status to "All Statuses".
+          <div className="clean-empty-state">
+            <p className="empty-title">No items found</p>
+            <p className="empty-sub">
+              Try adjusting your search query or reset the category filter.
             </p>
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '16px' }}>
-              {hasActiveFilters && (
-                <button className="btn btn-secondary" onClick={resetFilters}>
-                  Clear All Filters
-                </button>
-              )}
-              <button className="btn btn-primary" onClick={() => onSwitchView('report')}>
-                <PlusCircle size={15} /> Report New Item
-              </button>
-            </div>
+            <button
+              className="btn btn-secondary btn-sm"
+              style={{ marginTop: 14 }}
+              onClick={() => { setSearch(''); setSelectedType('ALL'); setSelectedCategory('ALL'); }}
+            >
+              Reset Filters
+            </button>
           </div>
         ) : (
           filteredItems.map(item => {
@@ -397,84 +189,55 @@ export default function FeedView({
             const canClaim = !isLost && item.status === 'OPEN' && !isMine;
 
             return (
-              <div key={item.itemId} className="item-card glass-panel">
-                <div>
-                  {/* Card Top: Badges & Date */}
-                  <div className="card-header">
-                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                      <span className={`badge ${isLost ? 'badge-lost' : 'badge-found'}`}>
-                        {isLost ? 'LOST ITEM' : 'FOUND ITEM'}
-                      </span>
-                      <span className={`badge-status ${(item.status || 'open').toLowerCase()}`}>
-                        {(item.status || 'OPEN').replace('_', ' ')}
-                      </span>
-                    </div>
-
-                    <div className="card-date-badge" title="Report Date">
-                      <Calendar size={12} />
-                      <span>{formatDate(item.eventDate)}</span>
-                    </div>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="card-title" onClick={() => onOpenDetailsModal(item)} style={{ cursor: 'pointer' }}>
-                    {item.title}
-                  </h3>
-
-                  {/* Metadata Chips: Category, Color, Brand */}
-                  <div className="card-tags">
-                    <span className="tag">{item.category}</span>
-                    {item.color && (
-                      <span className="tag color-tag">
-                        <span className="color-dot" style={{ backgroundColor: item.color.toLowerCase() }} />
-                        {item.color}
-                      </span>
-                    )}
-                    {item.brand && <span className="tag item-brand-pill">{item.brand}</span>}
-                  </div>
-
-                  {/* Description snippet */}
-                  <p className="card-desc">
-                    {item.description || 'No additional details provided for this campus report.'}
-                  </p>
-
-                  {/* Reporter line */}
-                  <div className="card-reporter-line">
-                    {isMine ? (
-                      <span className="mine-pill">⭐ You reported this item</span>
-                    ) : (
-                      <span className="reporter-pill">
-                        <User size={12} /> Reported by {item.reporterName || 'Campus Student'}
-                      </span>
-                    )}
-                  </div>
+              <div
+                key={item.itemId}
+                className="clean-item-card"
+                onClick={() => onOpenDetailsModal(item)}
+              >
+                {/* Visual Image / Category Placeholder */}
+                <div className="item-visual-box">
+                  <span className="visual-emoji">
+                    {getCategoryVisual(item.category, item.title)}
+                  </span>
+                  <span className={`pill-type ${isLost ? 'lost' : 'found'}`}>
+                    {isLost ? 'Lost' : 'Found'}
+                  </span>
                 </div>
 
-                {/* Card Footer */}
-                <div className="card-footer">
-                  <div className="card-location" title={`Location: ${item.location || 'Campus'}`}>
-                    <MapPin size={13} />
-                    <span>{item.location || 'Campus'}</span>
+                {/* Card Text Content */}
+                <div className="item-card-body">
+                  <h3 className="item-title">{item.title}</h3>
+                  <p className="item-category">{item.category}</p>
+
+                  <div className="item-meta-row">
+                    <span className="item-location">
+                      <MapPin size={12} /> {item.location || 'Campus'}
+                    </span>
+                    <span className="item-date">
+                      {isLost ? 'Lost' : 'Found'} {formatDate(item.eventDate)}
+                    </span>
                   </div>
 
-                  <div className="card-actions">
-                    {canClaim && (
+                  {/* Actions Bar */}
+                  <div className="item-card-actions" onClick={(e) => e.stopPropagation()}>
+                    {canClaim ? (
                       <button
                         type="button"
                         className="btn btn-sm btn-primary"
                         onClick={() => onOpenClaimModal(item)}
-                        title="Submit proof of ownership for this found item"
                       >
                         Claim Item
                       </button>
-                    )}
+                    ) : isMine ? (
+                      <span className="mine-indicator">Your report</span>
+                    ) : null}
+
                     <button
                       type="button"
                       className="btn btn-sm btn-secondary"
                       onClick={() => onOpenDetailsModal(item)}
-                      title="View complete details"
                     >
-                      <Eye size={13} /> Details
+                      Details
                     </button>
                   </div>
                 </div>
