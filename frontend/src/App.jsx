@@ -267,10 +267,14 @@ export default function App() {
         {currentView === 'feed' && (
           <FeedView
             items={items}
+            stats={stats}
+            matches={matches}
+            myItems={myItems}
             currentUser={currentUser}
             onSwitchView={setCurrentView}
             onOpenClaimModal={(item) => setClaimTargetItem(item)}
             onOpenDetailsModal={(item) => setDetailsTargetItem(item)}
+            onRefreshItems={loadItems}
           />
         )}
 

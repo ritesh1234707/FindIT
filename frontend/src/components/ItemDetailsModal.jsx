@@ -29,11 +29,11 @@ export default function ItemDetailsModal({
           <span className="tag">{item.category}</span>
         </div>
 
-        <p style={{ marginBottom: '14px', fontSize: '14px', color: 'var(--text-secondary)' }}>
+        <p style={{ marginBottom: '14px', fontSize: '14px', color: 'var(--card-text-secondary)' }}>
           {item.description || 'No additional description provided.'}
         </p>
 
-        <div style={{ background: 'rgba(0,0,0,0.25)', padding: '14px', borderRadius: 'var(--radius-md)', fontSize: '13px', lineHeight: '1.8', marginBottom: '18px' }}>
+        <div className="modal-details-box">
           <div><strong>Color:</strong> {item.color || 'Not specified'}</div>
           <div><strong>Brand:</strong> {item.brand || 'Not specified'}</div>
           <div><strong>Location:</strong> {item.location || 'Campus'}</div>
