@@ -186,7 +186,9 @@ export default function App() {
   }
 
   async function handleReviewClaim(claimId, action) {
-    const notes = prompt(`Optional ${action.toLowerCase()} notes for the student:`) || '';
+    const input = prompt(`Optional ${action.toLowerCase()} notes for the student:`, '');
+    if (input === null) return; // User cancelled
+    const notes = input.trim();
     try {
       const res = await fetch('/api/claims/review', {
         method: 'POST',

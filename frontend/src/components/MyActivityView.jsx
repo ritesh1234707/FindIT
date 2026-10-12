@@ -79,7 +79,7 @@ export default function MyActivityView({
               <div key={c.claimId} className="claim-card glass-panel">
                 <div className="claim-info">
                   <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '6px' }}>
-                    <h4>Claim #{c.claimId} on Item #{c.itemId}</h4>
+                    <h4>Claim #{c.claimId} on {c.itemTitle || `Item #${c.itemId}`}</h4>
                     <span className={`badge-status ${(c.status || 'pending').toLowerCase()}`}>
                       {c.status}
                     </span>
@@ -87,9 +87,9 @@ export default function MyActivityView({
                   <div className="claim-proof">
                     <strong>Your Verification:</strong> {c.verificationDetails}
                   </div>
-                  {c.adminNotes && (
-                    <div style={{ fontSize: '12.5px', color: 'var(--accent-amber)', marginTop: '6px' }}>
-                      <strong>Admin Response:</strong> {c.adminNotes}
+                  {(c.reviewNotes || c.adminNotes) && (
+                    <div style={{ fontSize: '12.5px', color: c.status === 'APPROVED' ? '#059669' : '#DC2626', marginTop: '6px', background: '#F8FAFC', padding: '6px 10px', borderRadius: '6px' }}>
+                      <strong>Admin Response:</strong> {c.reviewNotes || c.adminNotes}
                     </div>
                   )}
                 </div>
