@@ -105,6 +105,9 @@ public class DatabaseConfig {
             }
 
             String query = parsed.getQuery();
+            if (query != null) {
+                query = query.replace("ssl-mode=", "sslMode=");
+            }
             String params = query != null ? "?" + query : "?useSSL=true&allowPublicKeyRetrieval=true";
             if (!params.contains("allowPublicKeyRetrieval")) {
                 params += "&allowPublicKeyRetrieval=true";
