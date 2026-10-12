@@ -35,8 +35,15 @@ import java.util.concurrent.Executors;
  */
 public class ApiServer {
 
-    private static final int PORT = 8080;
-    private static final String WEB_DIR = "web";
+    private static int getServerPort() {
+        String envPort = System.getenv("PORT");
+        if (envPort != null && !envPort.isBlank()) {
+            try {
+                return Integer.parseInt(envPort.trim());
+            } catch (NumberFormatException ignored) {}
+        }
+        return 8080;
+    }
 
     private final AuthService      authService      = new AuthService();
     private final ItemService      itemService      = new ItemService();
@@ -46,7 +53,8 @@ public class ApiServer {
     private final UserDAO          userDAO          = new UserDAO();
 
     public void start() throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
+        int port = getServerPort();
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
 
         // API Endpoint handler
         server.createContext("/api", new ApiHandler());
@@ -59,8 +67,8 @@ public class ApiServer {
 
         System.out.println("=================================================");
         System.out.println("  FindIT Web Application & REST API Server Started!");
-        System.out.println("  URL: http://localhost:" + PORT);
-        System.out.println("  API: http://localhost:" + PORT + "/api");
+        System.out.println("  URL: http://0.0.0.0:" + port);
+        System.out.println("  API: http://0.0.0.0:" + port + "/api");
         System.out.println("=================================================");
     }
 
