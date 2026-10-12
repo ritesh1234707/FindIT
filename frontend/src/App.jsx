@@ -8,6 +8,7 @@ import AdminHubView from './components/AdminHubView';
 import Footer from './components/Footer';
 import ClaimModal from './components/ClaimModal';
 import ItemDetailsModal from './components/ItemDetailsModal';
+import EditItemModal from './components/EditItemModal';
 import AuthScreen from './components/AuthScreen';
 import './App.css';
 
@@ -36,6 +37,7 @@ export default function App() {
   // Modals
   const [claimTargetItem, setClaimTargetItem] = useState(null);
   const [detailsTargetItem, setDetailsTargetItem] = useState(null);
+  const [editTargetItem, setEditTargetItem] = useState(null);
 
   // Toasts
   const [toasts, setToasts] = useState([]);
@@ -212,6 +214,53 @@ export default function App() {
     }
   }
 
+  // ── ADMIN MODERATION: Delete & Edit Items ────────────────────────
+  async function handleDeleteItem(itemId) {
+    if (!window.confirm(`Are you sure you want to permanently delete item report #${itemId}? This cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/items/${itemId}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to delete item');
+
+      showToast(`Item #${itemId} was deleted successfully.`, 'info');
+      if (detailsTargetItem?.itemId === itemId) setDetailsTargetItem(null);
+      if (editTargetItem?.itemId === itemId) setEditTargetItem(null);
+      loadItems();
+      loadStats();
+      loadUserActivity();
+      loadMatches();
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  }
+
+  async function handleSaveEditItem(itemId, updatedData) {
+    try {
+      const res = await fetch(`/api/items/${itemId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update item');
+
+      showToast(`Item #${itemId} updated successfully!`, 'success');
+      setEditTargetItem(null);
+      if (detailsTargetItem?.itemId === itemId) {
+        setDetailsTargetItem(data.item);
+      }
+      loadItems();
+      loadStats();
+      loadUserActivity();
+      loadMatches();
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  }
+
   // ── GATEKEEPER: If not logged in, render the Auth Screen ─────────
   if (!currentUser) {
     return (
@@ -256,6 +305,8 @@ export default function App() {
             onSwitchView={setCurrentView}
             onOpenClaimModal={(item) => setClaimTargetItem(item)}
             onOpenDetailsModal={(item) => setDetailsTargetItem(item)}
+            onEditItem={(item) => setEditTargetItem(item)}
+            onDeleteItem={handleDeleteItem}
             onRefreshItems={loadItems}
           />
         )}
@@ -319,6 +370,16 @@ export default function App() {
           currentUser={currentUser}
           onClose={() => setDetailsTargetItem(null)}
           onOpenClaimModal={(item) => setClaimTargetItem(item)}
+          onEditItem={(item) => setEditTargetItem(item)}
+          onDeleteItem={handleDeleteItem}
+        />
+      )}
+
+      {editTargetItem && (
+        <EditItemModal
+          item={editTargetItem}
+          onClose={() => setEditTargetItem(null)}
+          onSave={handleSaveEditItem}
         />
       )}
 

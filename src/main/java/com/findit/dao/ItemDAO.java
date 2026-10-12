@@ -59,6 +59,35 @@ public class ItemDAO {
         }
     }
 
+    public void update(Item item) throws SQLException {
+        final String sql =
+            "UPDATE items SET title = ?, category = ?, color = ?, brand = ?, description = ?, " +
+            "location = ?, event_date = ?, report_type = ?, status = ? WHERE item_id = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, item.getTitle());
+            stmt.setString(2, item.getCategory());
+            stmt.setString(3, item.getColor());
+            stmt.setString(4, item.getBrand());
+            stmt.setString(5, item.getDescription());
+            stmt.setString(6, item.getLocation());
+            stmt.setDate  (7, item.getEventDate() != null ? Date.valueOf(item.getEventDate()) : null);
+            stmt.setString(8, item.getReportType().name());
+            stmt.setString(9, item.getStatus().name());
+            stmt.setInt   (10, item.getItemId());
+            stmt.executeUpdate();
+        }
+    }
+
+    public void delete(int itemId) throws SQLException {
+        final String sql = "DELETE FROM items WHERE item_id = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, itemId);
+            stmt.executeUpdate();
+        }
+    }
+
     // ── Read operations ───────────────────────────────────────────────────
 
     /**

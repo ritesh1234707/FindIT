@@ -1,11 +1,13 @@
 import React from 'react';
-import { MapPin, Calendar, Tag, User, ShieldCheck, CheckCircle } from 'lucide-react';
+import { MapPin, Calendar, Tag, User, CheckCircle, Edit3, Trash2 } from 'lucide-react';
 
 export default function ItemDetailsModal({
   item,
   currentUser,
   onClose,
-  onOpenClaimModal
+  onOpenClaimModal,
+  onEditItem,
+  onDeleteItem
 }) {
   if (!item) return null;
 
@@ -106,23 +108,57 @@ export default function ItemDetailsModal({
         )}
 
         {/* Modal Actions Footer */}
-        <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-          <button type="button" className="btn btn-secondary" onClick={onClose}>
-            Close
-          </button>
-
-          {canClaim && (
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => {
-                onClose();
-                onOpenClaimModal(item);
-              }}
-            >
-              Claim This Item
-            </button>
+        <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+          {/* Admin Management Tools */}
+          {isAdmin ? (
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                type="button"
+                className="btn btn-sm btn-secondary"
+                style={{ color: '#059669', borderColor: '#10B981', display: 'flex', alignItems: 'center', gap: '4px' }}
+                onClick={() => {
+                  onClose();
+                  if (onEditItem) onEditItem(item);
+                }}
+                title="Edit item information"
+              >
+                <Edit3 size={14} /> Edit Item
+              </button>
+              <button
+                type="button"
+                className="btn btn-sm btn-danger"
+                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+                onClick={() => {
+                  onClose();
+                  if (onDeleteItem) onDeleteItem(item.itemId);
+                }}
+                title="Remove inappropriate or spam report"
+              >
+                <Trash2 size={14} /> Delete Item
+              </button>
+            </div>
+          ) : (
+            <div />
           )}
+
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button type="button" className="btn btn-secondary" onClick={onClose}>
+              Close
+            </button>
+
+            {canClaim && (
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => {
+                  onClose();
+                  onOpenClaimModal(item);
+                }}
+              >
+                Claim This Item
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

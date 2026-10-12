@@ -66,6 +66,41 @@ public class ItemService {
         catch (SQLException e) { throw new RuntimeException("Failed to update status.", e); }
     }
 
+    public void delete(int itemId) {
+        try {
+            itemDAO.delete(itemId);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to delete item: " + e.getMessage(), e);
+        }
+    }
+
+    public Item update(int itemId, String title, String category, String color, String brand,
+                       String description, String location, LocalDate eventDate,
+                       Item.ReportType type, Item.ItemStatus status) {
+        String err = ValidationUtil.validateItemReport(title, category, location,
+                         eventDate != null ? eventDate.toString() : null);
+        if (err != null) throw new IllegalArgumentException(err);
+
+        try {
+            Item item = itemDAO.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found with id: " + itemId));
+            item.setTitle(title.trim());
+            item.setCategory(category);
+            item.setColor(color != null ? color.trim() : null);
+            item.setBrand(brand != null ? brand.trim() : null);
+            item.setDescription(description != null ? description.trim() : "");
+            item.setLocation(location.trim());
+            if (eventDate != null) item.setEventDate(eventDate);
+            if (type != null) item.setReportType(type);
+            if (status != null) item.setStatus(status);
+
+            itemDAO.update(item);
+            return item;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update item: " + e.getMessage(), e);
+        }
+    }
+
     // ── Stat helpers ──────────────────────────────────────────────────────
 
     public int countOpenLost()          { try { return itemDAO.countOpenByType(Item.ReportType.LOST);  } catch (SQLException e) { return 0; } }

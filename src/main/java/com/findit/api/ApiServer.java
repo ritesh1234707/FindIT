@@ -204,6 +204,10 @@ public class ApiServer {
                     handleCreateItem(exchange);
                 } else if (path.equals("/api/items/my") && "GET".equals(method)) {
                     handleGetMyItems(exchange, qParams);
+                } else if (path.startsWith("/api/items/") && "DELETE".equals(method)) {
+                    handleDeleteItem(exchange, path);
+                } else if (path.startsWith("/api/items/") && ("PUT".equals(method) || ("POST".equals(method) && path.endsWith("/update")))) {
+                    handleUpdateItem(exchange, path);
                 } else if (path.startsWith("/api/items/") && "GET".equals(method)) {
                     handleGetItemById(exchange, path);
 
@@ -370,6 +374,49 @@ public class ApiServer {
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", true);
         resp.put("item", item.get());
+        sendJsonResponse(exchange, 200, resp);
+    }
+
+    private void handleDeleteItem(HttpExchange exchange, String path) throws IOException {
+        String idStr = path.substring("/api/items/".length());
+        if (idStr.contains("/")) idStr = idStr.substring(0, idStr.indexOf("/"));
+        int id = Integer.parseInt(idStr);
+        itemService.delete(id);
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("message", "Item #" + id + " was deleted successfully.");
+        sendJsonResponse(exchange, 200, resp);
+    }
+
+    private void handleUpdateItem(HttpExchange exchange, String path) throws IOException {
+        String idStr = path.substring("/api/items/".length());
+        if (idStr.contains("/")) idStr = idStr.substring(0, idStr.indexOf("/"));
+        int id = Integer.parseInt(idStr);
+
+        String body = readBody(exchange);
+        JsonObject json = GsonUtils.GSON.fromJson(body, JsonObject.class);
+        if (json == null) {
+            sendError(exchange, 400, "Invalid JSON payload.");
+            return;
+        }
+
+        String title = json.has("title") ? json.get("title").getAsString() : "";
+        String category = json.has("category") ? json.get("category").getAsString() : "";
+        String color = json.has("color") && !json.get("color").isJsonNull() ? json.get("color").getAsString() : null;
+        String brand = json.has("brand") && !json.get("brand").isJsonNull() ? json.get("brand").getAsString() : null;
+        String description = json.has("description") && !json.get("description").isJsonNull() ? json.get("description").getAsString() : "";
+        String location = json.has("location") ? json.get("location").getAsString() : "";
+        LocalDate eventDate = json.has("eventDate") && !json.get("eventDate").isJsonNull()
+                ? LocalDate.parse(json.get("eventDate").getAsString()) : LocalDate.now();
+        Item.ReportType type = json.has("reportType")
+                ? Item.ReportType.valueOf(json.get("reportType").getAsString()) : Item.ReportType.LOST;
+        Item.ItemStatus status = json.has("status")
+                ? Item.ItemStatus.valueOf(json.get("status").getAsString()) : Item.ItemStatus.OPEN;
+
+        Item updated = itemService.update(id, title, category, color, brand, description, location, eventDate, type, status);
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("item", updated);
         sendJsonResponse(exchange, 200, resp);
     }
 

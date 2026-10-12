@@ -10,7 +10,9 @@ export default function FeedView({
   currentView = 'home',
   onSwitchView,
   onOpenClaimModal,
-  onOpenDetailsModal
+  onOpenDetailsModal,
+  onEditItem,
+  onDeleteItem
 }) {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -306,10 +308,11 @@ export default function FeedView({
                         {item.description ? item.description.slice(0, 75) + '...' : 'No additional details provided.'}
                       </p>
 
-                      <div className="card-action-bar">
+                      <div className="card-action-bar" style={{ display: 'flex', gap: '6px' }}>
                         <button
                           type="button"
                           className="figma-contact-btn"
+                          style={{ flex: 1 }}
                           onClick={(e) => {
                             e.stopPropagation();
                             if (canClaim) {
@@ -319,8 +322,36 @@ export default function FeedView({
                             }
                           }}
                         >
-                          {isAdmin ? 'View Details' : canClaim ? 'Claim' : 'View Details'}
+                          {canClaim ? 'Claim' : 'View Details'}
                         </button>
+                        {isAdmin && (
+                          <>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-secondary"
+                              style={{ padding: '6px 10px', color: '#059669', borderColor: '#10B981' }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (onEditItem) onEditItem(item);
+                              }}
+                              title="Edit item report"
+                            >
+                              ✏️
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-danger"
+                              style={{ padding: '6px 10px' }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (onDeleteItem) onDeleteItem(item.itemId);
+                              }}
+                              title="Delete inappropriate report"
+                            >
+                              🗑️
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -501,10 +532,11 @@ export default function FeedView({
                       : 'No additional details provided.'}
                   </p>
 
-                  <div className="card-action-bar">
+                  <div className="card-action-bar" style={{ display: 'flex', gap: '6px' }}>
                     <button
                       type="button"
                       className="figma-contact-btn"
+                      style={{ flex: 1 }}
                       onClick={(e) => {
                         e.stopPropagation();
                         if (canClaim) {
@@ -514,8 +546,36 @@ export default function FeedView({
                         }
                       }}
                     >
-                      {isAdmin ? 'View Details' : canClaim ? 'Claim' : 'View Details'}
+                      {canClaim ? 'Claim' : 'View Details'}
                     </button>
+                    {isAdmin && (
+                      <>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-secondary"
+                          style={{ padding: '6px 10px', color: '#059669', borderColor: '#10B981' }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (onEditItem) onEditItem(item);
+                          }}
+                          title="Edit item report"
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-danger"
+                          style={{ padding: '6px 10px' }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (onDeleteItem) onDeleteItem(item.itemId);
+                          }}
+                          title="Delete inappropriate report"
+                        >
+                          🗑️
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
