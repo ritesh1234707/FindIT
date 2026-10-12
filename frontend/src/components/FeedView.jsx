@@ -253,25 +253,27 @@ export default function FeedView({
           <Search size={18} className="search-pill-icon submit-icon" />
         </div>
 
-        {/* Action Button: Coral Report Button (Lost) or Green Report Button (Found) */}
-        {isLostPage ? (
-          <button
-            type="button"
-            className="figma-report-btn report-lost-btn"
-            onClick={() => onSwitchView('report-lost')}
-          >
-            <span className="report-btn-label">Report</span>
-            <span className="report-btn-emoji">📦☂️</span>
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="figma-report-btn report-found-btn"
-            onClick={() => onSwitchView('report-found')}
-          >
-            <span className="report-btn-label">Report</span>
-            <span className="report-btn-emoji">🔍✓</span>
-          </button>
+        {/* Action Button: Coral Report Button (Lost) or Green Report Button (Found) for students */}
+        {!isAdmin && (
+          isLostPage ? (
+            <button
+              type="button"
+              className="figma-report-btn report-lost-btn"
+              onClick={() => onSwitchView('report-lost')}
+            >
+              <span className="report-btn-label">Report</span>
+              <span className="report-btn-emoji">📦☂️</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="figma-report-btn report-found-btn"
+              onClick={() => onSwitchView('report-found')}
+            >
+              <span className="report-btn-label">Report</span>
+              <span className="report-btn-emoji">🔍✓</span>
+            </button>
+          )
         )}
       </div>
 
@@ -283,19 +285,21 @@ export default function FeedView({
             <p className="empty-subtext">
               {search ? 'No reports matched your query.' : `Be the first to file a ${isLostPage ? 'lost' : 'found'} report.`}
             </p>
-            <button
-              type="button"
-              className={`figma-report-btn ${isLostPage ? 'report-lost-btn' : 'report-found-btn'}`}
-              style={{ margin: '18px auto 0' }}
-              onClick={() => onSwitchView(isLostPage ? 'report-lost' : 'report-found')}
-            >
-              <span className="report-btn-label">Report {isLostPage ? 'Lost' : 'Found'} Item</span>
-            </button>
+            {!isAdmin && (
+              <button
+                type="button"
+                className={`figma-report-btn ${isLostPage ? 'report-lost-btn' : 'report-found-btn'}`}
+                style={{ margin: '18px auto 0' }}
+                onClick={() => onSwitchView(isLostPage ? 'report-lost' : 'report-found')}
+              >
+                <span className="report-btn-label">Report {isLostPage ? 'Lost' : 'Found'} Item</span>
+              </button>
+            )}
           </div>
         ) : (
           displayedItems.map((item) => {
             const isMine = item.userId === currentUser?.userId;
-            const canClaim = !isLostPage && item.status === 'OPEN' && !isMine;
+            const canClaim = !isAdmin && !isLostPage && item.status === 'OPEN' && !isMine;
 
             return (
               <div
@@ -366,7 +370,7 @@ export default function FeedView({
                         }
                       }}
                     >
-                      {canClaim ? 'Claim' : 'Contact'}
+                      {isAdmin ? 'View Details' : canClaim ? 'Claim' : 'Contact'}
                     </button>
                   </div>
                 </div>

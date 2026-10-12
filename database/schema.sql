@@ -103,7 +103,7 @@ INSERT IGNORE INTO users (full_name, email, password_hash, role)
 VALUES (
     'System Admin',
     'admin@findit.com',
-    '$2a$12$FrNlpiM1cjpWk9oYpfICTu5.OD/qL53UaQvpc4P3fgDBsPfn44sqa',
+    '$2a$12$v5w5LCCWVDlnVfhkzdyx9eqmRPTq7IFTGrpsJC7U70VufNBoWJw6i',
     'ADMIN'
 );
 -- Note: The hash above is for "Admin@123" - it will be regenerated at runtime if needed

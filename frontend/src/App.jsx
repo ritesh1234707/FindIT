@@ -299,7 +299,7 @@ export default function App() {
       </main>
 
       {/* Global Figma 4-Column Footer */}
-      <Footer onSwitchView={setCurrentView} />
+      <Footer onSwitchView={setCurrentView} currentUser={currentUser} />
 
       {/* Modals */}
       {claimTargetItem && (

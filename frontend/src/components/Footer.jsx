@@ -1,6 +1,8 @@
 import React from 'react';
 
-export default function Footer({ onSwitchView }) {
+export default function Footer({ onSwitchView, currentUser }) {
+  const isAdmin = currentUser?.role === 'ADMIN';
+
   return (
     <footer className="figma-footer">
       <div className="footer-container">
@@ -9,17 +11,30 @@ export default function Footer({ onSwitchView }) {
           <div className="footer-box-illustration">
             📦☂️
           </div>
-          <span className="footer-brand-title">Lost &amp; Found</span>
+          <span className="footer-brand-title">FIND IT</span>
         </div>
 
         {/* Column 1: Site */}
         <div className="footer-col">
           <h4>Site</h4>
           <ul>
-            <li><button type="button" onClick={() => onSwitchView('lost')}>Lost</button></li>
-            <li><button type="button" onClick={() => onSwitchView('report-lost')}>Report Lost</button></li>
-            <li><button type="button" onClick={() => onSwitchView('found')}>Found</button></li>
-            <li><button type="button" onClick={() => onSwitchView('report-found')}>Report Found</button></li>
+            {isAdmin ? (
+              <>
+                <li><button type="button" onClick={() => onSwitchView('admin')}>Admin Dashboard</button></li>
+                <li><button type="button" onClick={() => onSwitchView('lost')}>Lost Items</button></li>
+                <li><button type="button" onClick={() => onSwitchView('found')}>Found Items</button></li>
+                <li><button type="button" onClick={() => onSwitchView('matches')}>Smart Matches</button></li>
+              </>
+            ) : (
+              <>
+                <li><button type="button" onClick={() => onSwitchView('home')}>Home</button></li>
+                <li><button type="button" onClick={() => onSwitchView('lost')}>Lost</button></li>
+                <li><button type="button" onClick={() => onSwitchView('report-lost')}>Report Lost</button></li>
+                <li><button type="button" onClick={() => onSwitchView('found')}>Found</button></li>
+                <li><button type="button" onClick={() => onSwitchView('report-found')}>Report Found</button></li>
+                <li><button type="button" onClick={() => onSwitchView('my-items')}>My Profile</button></li>
+              </>
+            )}
           </ul>
         </div>
 

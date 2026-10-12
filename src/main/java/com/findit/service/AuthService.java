@@ -65,7 +65,11 @@ public class AuthService {
         }
 
         try {
-            Optional<User> opt = userDAO.findByEmail(email.trim().toLowerCase());
+            String lookupEmail = email.trim().toLowerCase();
+            if ("admin".equals(lookupEmail)) {
+                lookupEmail = "admin@findit.com";
+            }
+            Optional<User> opt = userDAO.findByEmail(lookupEmail);
 
             // Generic error — don't reveal whether email or password was wrong
             if (opt.isEmpty() || !PasswordUtil.verify(password, opt.get().getPasswordHash())) {

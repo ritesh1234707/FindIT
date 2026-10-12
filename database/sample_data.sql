@@ -8,10 +8,10 @@ USE findit_db;
 
 -- Sample students (password for all: Student@123)
 INSERT IGNORE INTO users (full_name, email, password_hash, role) VALUES
-('Ritesh Kumar',    'ritesh@college.edu',  '$2a$12$u6r/m1Zb/A1OML.DQK77E.JC557xXA8J7kfBOSoTXXJil/7JCOHXW', 'STUDENT'),
-('Priya Sharma',   'priya@college.edu',   '$2a$12$u6r/m1Zb/A1OML.DQK77E.JC557xXA8J7kfBOSoTXXJil/7JCOHXW', 'STUDENT'),
-('Arjun Singh',    'arjun@college.edu',   '$2a$12$u6r/m1Zb/A1OML.DQK77E.JC557xXA8J7kfBOSoTXXJil/7JCOHXW', 'STUDENT'),
-('Anjali Verma',   'anjali@college.edu',  '$2a$12$u6r/m1Zb/A1OML.DQK77E.JC557xXA8J7kfBOSoTXXJil/7JCOHXW', 'STUDENT');
+('Ritesh Kumar',    'ritesh@college.edu',  '$2a$12$YHxpFBZIHkDfP10S2F2I8uNrm1m1a/b0XwAFKHMPbb7m2y5h/H3Zu', 'STUDENT'),
+('Priya Sharma',   'priya@college.edu',   '$2a$12$YHxpFBZIHkDfP10S2F2I8uNrm1m1a/b0XwAFKHMPbb7m2y5h/H3Zu', 'STUDENT'),
+('Arjun Singh',    'arjun@college.edu',   '$2a$12$YHxpFBZIHkDfP10S2F2I8uNrm1m1a/b0XwAFKHMPbb7m2y5h/H3Zu', 'STUDENT'),
+('Anjali Verma',   'anjali@college.edu',  '$2a$12$YHxpFBZIHkDfP10S2F2I8uNrm1m1a/b0XwAFKHMPbb7m2y5h/H3Zu', 'STUDENT');
 
 -- Sample LOST reports
 INSERT IGNORE INTO items (user_id, title, category, color, brand, description, location, event_date, report_type, status) VALUES
