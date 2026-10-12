@@ -1410,3 +1410,783 @@
   }
 }
 
+/* ============================================================
+   Figma Design System: Clean, Simple, Uncluttered
+   Matches the Figma screens: Home, Lost Items, Found Items & Footer
+   ============================================================ */
+
+/* ── Figma Top Navbar ────────────────────────────────────────── */
+.figma-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 48px;
+  background: #FAF8F5;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.figma-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.figma-logo-box {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 24px;
+}
+
+.figma-brand-text .brand-title {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: -0.02em;
+  color: #18181B;
+  line-height: 1.1;
+}
+
+.figma-brand-text .brand-tagline {
+  font-size: 10px;
+  color: #71717A;
+  letter-spacing: 0.02em;
+}
+
+.figma-nav-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.figma-nav-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: #27272A;
+  padding: 7px 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.figma-nav-btn:hover {
+  background: #EDE8E1;
+  color: #18181B;
+}
+
+.figma-nav-btn.active {
+  background: #E2DDD5;
+  color: #18181B;
+  font-weight: 600;
+}
+
+.figma-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.figma-signout-btn {
+  background: #F4F4F5;
+  border: 1.5px solid #D4D4D8;
+  border-radius: 8px;
+  padding: 6px 18px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: #18181B;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.figma-signout-btn:hover {
+  background: #E4E4E7;
+  border-color: #A1A1AA;
+}
+
+/* ── Page Canvas with Subtle Figma Gradient ──────────────────── */
+.figma-page-canvas {
+  min-height: calc(100vh - 160px);
+  background: linear-gradient(135deg, #FCF5EB 0%, #FAF8F5 42%, #EFF8EA 100%);
+  padding: 36px 56px 80px;
+}
+
+/* ── Home Page: Hero Layout ──────────────────────────────────── */
+.figma-hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+  margin-top: 10px;
+  margin-bottom: 64px;
+}
+
+.figma-hero-left {
+  flex: 1.2;
+}
+
+.figma-hero-headline {
+  font-family: var(--font-heading);
+  font-size: 68px;
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #18181B;
+  margin-bottom: 22px;
+}
+
+.figma-green-gradient {
+  color: #2D6A3E;
+}
+
+.figma-hero-subtext {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #52525B;
+  max-width: 440px;
+}
+
+.figma-hero-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.figma-hero-buttons-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 280px;
+}
+
+.figma-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 26px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.figma-action-btn .btn-text {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+}
+
+.figma-action-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-lost-coral {
+  background: #D45547;
+  box-shadow: 0 6px 18px rgba(212, 85, 71, 0.32);
+}
+
+.btn-lost-coral:hover {
+  background: #C84739;
+  box-shadow: 0 10px 24px rgba(212, 85, 71, 0.42);
+}
+
+.btn-lost-coral .btn-icon-box {
+  font-size: 26px;
+}
+
+.btn-found-green {
+  background: #38A169;
+  box-shadow: 0 6px 18px rgba(56, 161, 105, 0.32);
+}
+
+.btn-found-green:hover {
+  background: #2F855A;
+  box-shadow: 0 10px 24px rgba(56, 161, 105, 0.42);
+}
+
+.btn-found-green .btn-icon-glass {
+  font-size: 26px;
+}
+
+/* 3-Image Collage in Figma Hero */
+.figma-collage-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 140px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.collage-card {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  border: 2px solid #FFFFFF;
+  background: #E5E7EB;
+  transition: transform 0.2s ease;
+}
+
+.collage-card:hover {
+  transform: translateY(-4px) scale(1.05) !important;
+  z-index: 10;
+}
+
+.collage-card .collage-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.collage-card.card-1 {
+  left: 10px;
+  transform: rotate(-6deg);
+  z-index: 1;
+}
+
+.collage-card.card-2 {
+  left: 105px;
+  transform: translateY(-8px);
+  z-index: 2;
+}
+
+.collage-card.card-3 {
+  right: 10px;
+  transform: rotate(6deg);
+  z-index: 3;
+}
+
+.collage-fallback-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 11px;
+  font-weight: 600;
+  color: #4B5563;
+  background: #EDE9E1;
+}
+
+/* Home Section Header */
+.figma-home-recent-section {
+  margin-top: 48px;
+}
+
+.section-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.section-headline {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 600;
+  color: #18181B;
+}
+
+.section-subline {
+  font-size: 13.5px;
+  color: #71717A;
+  margin-top: 4px;
+}
+
+.section-quick-links {
+  display: flex;
+  gap: 12px;
+}
+
+.pill-link-btn {
+  background: #FFFFFF;
+  border: 1px solid #E2DDD5;
+  border-radius: 9999px;
+  padding: 6px 16px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #27272A;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pill-link-btn:hover {
+  background: #FAF8F5;
+  border-color: #18181B;
+}
+
+/* ── Centered Title Header for Lost & Found Pages ────────────── */
+.figma-title-header {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 28px;
+}
+
+.figma-page-hero-title {
+  font-family: var(--font-heading);
+  font-size: 58px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.title-lost {
+  background: linear-gradient(90deg, #7A1D1D 0%, #22543D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.title-found {
+  background: linear-gradient(90deg, #1C5233 0%, #7A1D1D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Search Bar + Report Button Controls Row ─────────────────── */
+.figma-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.figma-pill-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #FFFFFF;
+  border: 1.5px solid #2D6A3E;
+  border-radius: 9999px;
+  padding: 0 20px;
+  width: 100%;
+  max-width: 460px;
+  height: 48px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: all 0.18s ease;
+}
+
+.figma-pill-search:focus-within {
+  border-color: #18181B;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.figma-pill-search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  color: #18181B;
+}
+
+.figma-pill-search input::placeholder {
+  color: #71717A;
+}
+
+.search-pill-icon {
+  color: #4B5563;
+}
+
+.figma-report-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: none;
+  border-radius: 14px;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.figma-report-btn .report-btn-label {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+}
+
+.figma-report-btn .report-btn-emoji {
+  font-size: 22px;
+}
+
+.report-lost-btn {
+  background: #D45547;
+  box-shadow: 0 6px 16px rgba(212, 85, 71, 0.3);
+}
+
+.report-lost-btn:hover {
+  background: #C84739;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(212, 85, 71, 0.4);
+}
+
+.report-found-btn {
+  background: #38A169;
+  box-shadow: 0 6px 16px rgba(56, 161, 105, 0.3);
+}
+
+.report-found-btn:hover {
+  background: #2F855A;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(56, 161, 105, 0.4);
+}
+
+/* ── 4-Column Cards Grid ─────────────────────────────────────── */
+.figma-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1200px) {
+  .figma-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .figma-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.figma-item-card {
+  background: #FFFFFF;
+  border: 1px solid #EDE8E1;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.22s ease;
+  cursor: pointer;
+}
+
+.figma-item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  border-color: #D4CEBF;
+}
+
+.card-top-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #F9F6F0;
+  border-bottom: 1px solid #EFEAE1;
+}
+
+.avatar-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #544E83;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-author-meta {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card-author-meta .author-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #18181B;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-author-meta .author-date {
+  font-size: 11.5px;
+  color: #71717A;
+}
+
+.card-visual-stage {
+  height: 150px;
+  background: #E2E5EA;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  position: relative;
+}
+
+.carousel-arrow {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4B5563;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.carousel-arrow:hover {
+  background: #FFFFFF;
+  color: #18181B;
+}
+
+.geometric-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.geo-triangle {
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 30px solid #9CA3AF;
+}
+
+.geo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.geo-square {
+  width: 26px;
+  height: 26px;
+  background: #9CA3AF;
+  border-radius: 2px;
+}
+
+.geo-circle {
+  width: 26px;
+  height: 26px;
+  background: #9CA3AF;
+  border-radius: 50%;
+}
+
+.card-bottom-info {
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.card-item-title {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: #18181B;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-item-location {
+  font-size: 12.5px;
+  color: #71717A;
+  margin-bottom: 8px;
+}
+
+.card-item-desc {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #52525B;
+  min-height: 38px;
+  margin-bottom: 16px;
+}
+
+.card-action-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+.figma-contact-btn {
+  background: #544E83;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 9999px;
+  padding: 6px 20px;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.figma-contact-btn:hover {
+  background: #433D6E;
+  transform: translateY(-1px);
+}
+
+/* Empty State */
+.figma-empty-container {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  background: #FFFFFF;
+  border-radius: 18px;
+  border: 1px dashed #DDD8CE;
+}
+
+.empty-heading {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 600;
+  color: #18181B;
+}
+
+.empty-subtext {
+  font-size: 14px;
+  color: #71717A;
+  margin-top: 6px;
+}
+
+/* ── Figma 4-Column Footer ───────────────────────────────────── */
+.figma-footer {
+  background: #FAF8F5;
+  border-top: 2px solid #5C90C7;
+  padding: 48px 60px 24px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 36px;
+  flex-wrap: wrap;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.footer-brand-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 160px;
+}
+
+.footer-box-illustration {
+  font-size: 42px;
+}
+
+.footer-brand-title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 16px;
+  color: #18181B;
+}
+
+.footer-col h4 {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  color: #18181B;
+  margin-bottom: 14px;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-col ul li button,
+.footer-col ul li a {
+  background: transparent;
+  border: none;
+  color: #52525B;
+  font-size: 13.5px;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--font-sans);
+  transition: color 0.15s ease;
+}
+
+.footer-col ul li button:hover,
+.footer-col ul li a:hover {
+  color: #18181B;
+  text-decoration: underline;
+}
+
+.contact-item {
+  font-size: 13px;
+  color: #52525B;
+  margin-bottom: 6px;
+}
+
+.footer-social-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.footer-social-row a {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #D4D4D8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #27272A;
+  transition: all 0.18s ease;
+}
+
+.footer-social-row a:hover {
+  background: #18181B;
+  color: #FFFFFF;
+  border-color: #18181B;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 36px;
+  border-top: 1px solid #EDE8E1;
+  margin-top: 36px;
+}
+
+.footer-bottom p {
+  font-size: 12.5px;
+  color: #71717A;
+}
+
+

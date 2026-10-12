@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, MapPin, PlusCircle, ArrowUpRight, Zap, Check } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, Menu, ArrowRight } from 'lucide-react';
 
 export default function FeedView({
   items = [],
@@ -7,67 +7,32 @@ export default function FeedView({
   matches = [],
   myItems = [],
   currentUser,
+  currentView = 'home',
   onSwitchView,
   onOpenClaimModal,
   onOpenDetailsModal
 }) {
   const [search, setSearch] = useState('');
-  const [selectedType, setSelectedType] = useState('ALL');
-  const [selectedCategory, setSelectedCategory] = useState('ALL');
 
-  // Categories list
-  const categories = [
-    'ALL',
-    'ID Card',
-    'Earbuds / Headphones',
-    'Phone / Electronics',
-    'Bag / Backpack',
-    'Calculator',
-    'Keys / Keychain',
-    'Water Bottle',
-    'Wallet / Purse',
-    'Books / Notes',
-    'Other'
-  ];
-
-  // Map category to a tasteful subtle icon/emoji placeholder
-  function getCategoryVisual(category, title = '') {
-    const c = (category || '').toLowerCase();
-    const t = (title || '').toLowerCase();
-    if (c.includes('earbud') || c.includes('headphone') || t.includes('jbl') || t.includes('bud')) return '🎧';
-    if (c.includes('phone') || c.includes('electronic')) return '📱';
-    if (c.includes('id') || c.includes('card')) return '🪪';
-    if (c.includes('bag') || c.includes('backpack')) return '🎒';
-    if (c.includes('calculator')) return '🔢';
-    if (c.includes('water') || c.includes('bottle')) return '🍶';
-    if (c.includes('key')) return '🔑';
-    if (c.includes('wallet') || c.includes('purse')) return '👛';
-    if (c.includes('book') || c.includes('notes')) return '📖';
-    if (t.includes('watch')) return '⌚';
-    if (t.includes('cap') || t.includes('hat')) return '🧢';
-    return '📦';
-  }
-
-  // Filtered Items (clean and fast)
-  const filteredItems = useMemo(() => {
+  // Filter items by current page mode (Lost vs Found) and search query
+  const displayedItems = useMemo(() => {
     return items.filter(item => {
-      // Type filter
-      if (selectedType !== 'ALL' && item.reportType !== selectedType) return false;
-      // Category filter
-      if (selectedCategory !== 'ALL' && item.category !== selectedCategory) return false;
-      // Search
+      if (currentView === 'lost' && item.reportType !== 'LOST') return false;
+      if (currentView === 'found' && item.reportType !== 'FOUND') return false;
+
       if (search.trim()) {
         const q = search.toLowerCase();
         const inTitle = item.title?.toLowerCase().includes(q);
         const inDesc  = item.description?.toLowerCase().includes(q);
         const inLoc   = item.location?.toLowerCase().includes(q);
-        const inBrand = item.brand?.toLowerCase().includes(q);
-        if (!inTitle && !inDesc && !inLoc && !inBrand) return false;
+        const inCat   = item.category?.toLowerCase().includes(q);
+        if (!inTitle && !inDesc && !inLoc && !inCat) return false;
       }
       return true;
     });
-  }, [items, selectedType, selectedCategory, search]);
+  }, [items, currentView, search]);
 
+  // Clean date formatter
   function formatDate(dStr) {
     if (!dStr) return 'Recently';
     try {
@@ -82,162 +47,326 @@ export default function FeedView({
     }
   }
 
-  return (
-    <div className="view-panel active animate-fade-in">
+  // Get initial character for card avatar
+  function getInitial(item) {
+    if (item.title) return item.title.trim().charAt(0).toUpperCase();
+    return 'A';
+  }
 
-      {/* ── Editorial Hero Section (Inspired by Reunited.) ── */}
-      <section className="editorial-hero">
-        <div className="hero-text-block">
-          <h1 className="editorial-headline">
-            How you get it <em>back</em>.
-          </h1>
-          <p className="editorial-description">
-            Left behind in a classroom, on the field, or at the library — staff collect it, or whoever finds it logs it here. Every item is verified and securely restored.
-          </p>
-          <div className="editorial-actions">
-            <button className="btn btn-primary" onClick={() => onSwitchView('report')}>
-              Report an Item <ArrowUpRight size={15} />
-            </button>
-            <button className="btn btn-secondary" onClick={() => onSwitchView('matches')}>
-              <Zap size={14} /> Smart Matches {matches.length > 0 && `(${matches.length})`}
-            </button>
+  // ─────────────────────────────────────────────────────────────
+  // 1. HOME VIEW (Figma Slide 1)
+  // ─────────────────────────────────────────────────────────────
+  if (currentView === 'home') {
+    return (
+      <div className="figma-page-canvas animate-fade-in">
+        {/* Hero Section */}
+        <section className="figma-hero-section">
+          <div className="figma-hero-left">
+            <h1 className="figma-hero-headline">
+              Find &amp;<br />
+              Recover<br />
+              <span className="figma-green-gradient">With Ease</span>
+            </h1>
+            <p className="figma-hero-subtext">
+              Experience effortless recovery with our dedicated lost and found service.
+            </p>
           </div>
-        </div>
-      </section>
 
-      {/* ── Minimalist, Uncluttered Search & Filter Strip ── */}
-      <div className="minimal-filter-strip">
-        <div className="clean-search-box">
-          <Search size={16} className="search-icon" />
+          <div className="figma-hero-right">
+            {/* Top Action Buttons: Lost & Found */}
+            <div className="figma-hero-buttons-col">
+              <button
+                type="button"
+                className="figma-action-btn btn-lost-coral"
+                onClick={() => onSwitchView('lost')}
+              >
+                <span className="btn-text">Lost</span>
+                <span className="btn-icon-box">📦☂️</span>
+              </button>
+
+              <button
+                type="button"
+                className="figma-action-btn btn-found-green"
+                onClick={() => onSwitchView('found')}
+              >
+                <span className="btn-text">Found</span>
+                <span className="btn-icon-glass">🔍</span>
+              </button>
+            </div>
+
+            {/* Collage Preview Below Buttons */}
+            <div className="figma-collage-wrap">
+              <div className="collage-card card-1">
+                <img
+                  src="https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=320&q=80"
+                  alt="Reviewing notes"
+                  className="collage-img"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+                <div className="collage-fallback-badge">🔎 Inspect</div>
+              </div>
+
+              <div className="collage-card card-2">
+                <img
+                  src="https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?auto=format&fit=crop&w=320&q=80"
+                  alt="Lost flyer on tree"
+                  className="collage-img"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+                <div className="collage-fallback-badge">📄 Notice</div>
+              </div>
+
+              <div className="collage-card card-3">
+                <img
+                  src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=320&q=80"
+                  alt="Compass navigation"
+                  className="collage-img"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+                <div className="collage-fallback-badge">🧭 Locate</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Quick Overview Section */}
+        <section className="figma-home-recent-section">
+          <div className="section-header-row">
+            <div>
+              <h2 className="section-headline">Active Campus Reports</h2>
+              <p className="section-subline">Browse recent items reported lost or found by students and staff.</p>
+            </div>
+            <div className="section-quick-links">
+              <button
+                type="button"
+                className="pill-link-btn"
+                onClick={() => onSwitchView('lost')}
+              >
+                All Lost Items <ArrowRight size={14} />
+              </button>
+              <button
+                type="button"
+                className="pill-link-btn"
+                onClick={() => onSwitchView('found')}
+              >
+                All Found Items <ArrowRight size={14} />
+              </button>
+            </div>
+          </div>
+
+          <div className="figma-cards-grid">
+            {items.slice(0, 4).map((item) => {
+              const isLost = item.reportType === 'LOST';
+              return (
+                <div
+                  key={item.itemId}
+                  className="figma-item-card"
+                  onClick={() => onOpenDetailsModal(item)}
+                >
+                  {/* Top: Avatar & Date */}
+                  <div className="card-top-header">
+                    <div className="avatar-circle">
+                      {getInitial(item)}
+                    </div>
+                    <div className="card-author-meta">
+                      <span className="author-name">{item.title}</span>
+                      <span className="author-date">Date: {formatDate(item.eventDate)}</span>
+                    </div>
+                  </div>
+
+                  {/* Middle: Shape / Image Placeholder with Carousel Arrows */}
+                  <div className="card-visual-stage">
+                    <button type="button" className="carousel-arrow arrow-left" onClick={(e) => e.stopPropagation()}>
+                      <ChevronLeft size={16} />
+                    </button>
+                    <div className="geometric-placeholder">
+                      <div className="geo-triangle" />
+                      <div className="geo-row">
+                        <div className="geo-square" />
+                        <div className="geo-circle" />
+                      </div>
+                    </div>
+                    <button type="button" className="carousel-arrow arrow-right" onClick={(e) => e.stopPropagation()}>
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+
+                  {/* Bottom: Info & Contact Button */}
+                  <div className="card-bottom-info">
+                    <h3 className="card-item-title">{item.title}</h3>
+                    <p className="card-item-location">{item.location || 'Campus Center'}</p>
+                    <p className="card-item-desc">
+                      {item.description ? item.description.slice(0, 75) + '...' : 'No additional details provided.'}
+                    </p>
+
+                    <div className="card-action-bar">
+                      <button
+                        type="button"
+                        className="figma-contact-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!isLost && item.status === 'OPEN' && item.userId !== currentUser?.userId) {
+                            onOpenClaimModal(item);
+                          } else {
+                            onOpenDetailsModal(item);
+                          }
+                        }}
+                      >
+                        {!isLost && item.status === 'OPEN' && item.userId !== currentUser?.userId ? 'Claim' : 'Contact'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // 2. LOST ITEMS OR FOUND ITEMS VIEW (Figma Slide 2 & 3)
+  // ─────────────────────────────────────────────────────────────
+  const isLostPage = currentView === 'lost';
+  const pageTitle = isLostPage ? 'Lost Items' : 'Found Items';
+
+  return (
+    <div className="figma-page-canvas animate-fade-in">
+      {/* Centered Large Title matching Figma */}
+      <div className="figma-title-header">
+        <h1 className={`figma-page-hero-title ${isLostPage ? 'title-lost' : 'title-found'}`}>
+          {pageTitle}
+        </h1>
+      </div>
+
+      {/* Search Bar + Report Button Row */}
+      <div className="figma-controls-row">
+        <div className="figma-pill-search">
+          <Menu size={18} className="search-pill-icon menu-icon" />
           <input
             type="text"
-            placeholder="Search by item, location, or brand..."
+            placeholder="Item Name"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {search && (
-            <button type="button" className="clear-btn" onClick={() => setSearch('')}>
-              &times;
-            </button>
-          )}
+          <Search size={18} className="search-pill-icon submit-icon" />
         </div>
 
-        <div className="minimal-segmented-toggle">
+        {/* Action Button: Coral Report Button (Lost) or Green Report Button (Found) */}
+        {isLostPage ? (
           <button
             type="button"
-            className={`segment-btn ${selectedType === 'ALL' ? 'active' : ''}`}
-            onClick={() => setSelectedType('ALL')}
+            className="figma-report-btn report-lost-btn"
+            onClick={() => onSwitchView('report-lost')}
           >
-            All Items
+            <span className="report-btn-label">Report</span>
+            <span className="report-btn-emoji">📦☂️</span>
           </button>
+        ) : (
           <button
             type="button"
-            className={`segment-btn ${selectedType === 'LOST' ? 'active' : ''}`}
-            onClick={() => setSelectedType('LOST')}
+            className="figma-report-btn report-found-btn"
+            onClick={() => onSwitchView('report-found')}
           >
-            Lost
+            <span className="report-btn-label">Report</span>
+            <span className="report-btn-emoji">🔍✓</span>
           </button>
-          <button
-            type="button"
-            className={`segment-btn ${selectedType === 'FOUND' ? 'active' : ''}`}
-            onClick={() => setSelectedType('FOUND')}
-          >
-            Found
-          </button>
-        </div>
-
-        <select
-          className="clean-select category-select"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          {categories.map(c => (
-            <option key={c} value={c}>
-              {c === 'ALL' ? 'All Categories' : c}
-            </option>
-          ))}
-        </select>
+        )}
       </div>
 
-      {/* ── Feed Count Header ── */}
-      <div className="clean-feed-header">
-        <span className="count-label">
-          Showing {filteredItems.length} {filteredItems.length === 1 ? 'item' : 'items'}
-        </span>
-      </div>
-
-      {/* ── Refined Editorial Cards Grid ── */}
-      <div className="editorial-cards-grid">
-        {filteredItems.length === 0 ? (
-          <div className="clean-empty-state">
-            <p className="empty-title">No items found</p>
-            <p className="empty-sub">
-              Try adjusting your search query or reset the category filter.
+      {/* 4-Column Cards Grid matching Figma */}
+      <div className="figma-cards-grid">
+        {displayedItems.length === 0 ? (
+          <div className="figma-empty-container">
+            <p className="empty-heading">No {isLostPage ? 'lost' : 'found'} items listed yet</p>
+            <p className="empty-subtext">
+              {search ? 'No reports matched your query.' : `Be the first to file a ${isLostPage ? 'lost' : 'found'} report.`}
             </p>
             <button
-              className="btn btn-secondary btn-sm"
-              style={{ marginTop: 14 }}
-              onClick={() => { setSearch(''); setSelectedType('ALL'); setSelectedCategory('ALL'); }}
+              type="button"
+              className={`figma-report-btn ${isLostPage ? 'report-lost-btn' : 'report-found-btn'}`}
+              style={{ margin: '18px auto 0' }}
+              onClick={() => onSwitchView(isLostPage ? 'report-lost' : 'report-found')}
             >
-              Reset Filters
+              <span className="report-btn-label">Report {isLostPage ? 'Lost' : 'Found'} Item</span>
             </button>
           </div>
         ) : (
-          filteredItems.map(item => {
-            const isLost = item.reportType === 'LOST';
+          displayedItems.map((item) => {
             const isMine = item.userId === currentUser?.userId;
-            const canClaim = !isLost && item.status === 'OPEN' && !isMine;
+            const canClaim = !isLostPage && item.status === 'OPEN' && !isMine;
 
             return (
               <div
                 key={item.itemId}
-                className="clean-item-card"
+                className="figma-item-card"
                 onClick={() => onOpenDetailsModal(item)}
               >
-                {/* Visual Image / Category Placeholder */}
-                <div className="item-visual-box">
-                  <span className="visual-emoji">
-                    {getCategoryVisual(item.category, item.title)}
-                  </span>
-                  <span className={`pill-type ${isLost ? 'lost' : 'found'}`}>
-                    {isLost ? 'Lost' : 'Found'}
-                  </span>
+                {/* Top: Avatar Circle & Metadata */}
+                <div className="card-top-header">
+                  <div className="avatar-circle">
+                    {getInitial(item)}
+                  </div>
+                  <div className="card-author-meta">
+                    <span className="author-name">{item.title}</span>
+                    <span className="author-date">Date: {formatDate(item.eventDate)}</span>
+                  </div>
                 </div>
 
-                {/* Card Text Content */}
-                <div className="item-card-body">
-                  <h3 className="item-title">{item.title}</h3>
-                  <p className="item-category">{item.category}</p>
+                {/* Middle: Shape / Image Placeholder with Carousel Arrows */}
+                <div className="card-visual-stage">
+                  <button
+                    type="button"
+                    className="carousel-arrow arrow-left"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
 
-                  <div className="item-meta-row">
-                    <span className="item-location">
-                      <MapPin size={12} /> {item.location || 'Campus'}
-                    </span>
-                    <span className="item-date">
-                      {isLost ? 'Lost' : 'Found'} {formatDate(item.eventDate)}
-                    </span>
+                  <div className="geometric-placeholder">
+                    <div className="geo-triangle" />
+                    <div className="geo-row">
+                      <div className="geo-square" />
+                      <div className="geo-circle" />
+                    </div>
                   </div>
 
-                  {/* Actions Bar */}
-                  <div className="item-card-actions" onClick={(e) => e.stopPropagation()}>
-                    {canClaim ? (
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-primary"
-                        onClick={() => onOpenClaimModal(item)}
-                      >
-                        Claim Item
-                      </button>
-                    ) : isMine ? (
-                      <span className="mine-indicator">Your report</span>
-                    ) : null}
+                  <button
+                    type="button"
+                    className="carousel-arrow arrow-right"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label="Next image"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
 
+                {/* Bottom: Info & Contact Button */}
+                <div className="card-bottom-info">
+                  <h3 className="card-item-title">{item.title}</h3>
+                  <p className="card-item-location">{item.location || 'Campus Center'}</p>
+                  <p className="card-item-desc">
+                    {item.description
+                      ? item.description.slice(0, 80) + (item.description.length > 80 ? '...' : '')
+                      : 'No additional details provided.'}
+                  </p>
+
+                  <div className="card-action-bar">
                     <button
                       type="button"
-                      className="btn btn-sm btn-secondary"
-                      onClick={() => onOpenDetailsModal(item)}
+                      className="figma-contact-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (canClaim) {
+                          onOpenClaimModal(item);
+                        } else {
+                          onOpenDetailsModal(item);
+                        }
+                      }}
                     >
-                      Details
+                      {canClaim ? 'Claim' : 'Contact'}
                     </button>
                   </div>
                 </div>

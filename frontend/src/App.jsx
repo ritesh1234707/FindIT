@@ -5,6 +5,7 @@ import ReportView from './components/ReportView';
 import MatchesView from './components/MatchesView';
 import MyActivityView from './components/MyActivityView';
 import AdminHubView from './components/AdminHubView';
+import Footer from './components/Footer';
 import ClaimModal from './components/ClaimModal';
 import ItemDetailsModal from './components/ItemDetailsModal';
 import AuthScreen from './components/AuthScreen';
@@ -21,7 +22,7 @@ export default function App() {
   });
 
   const [currentView, setCurrentView] = useState(() => {
-    return currentUser?.role === 'ADMIN' ? 'admin' : 'feed';
+    return currentUser?.role === 'ADMIN' ? 'admin' : 'home';
   });
 
   const [users, setUsers] = useState([]);
@@ -143,7 +144,7 @@ export default function App() {
   function handleLoginSuccess(user) {
     setCurrentUser(user);
     localStorage.setItem('findit_user', JSON.stringify(user));
-    setCurrentView(user.role === 'ADMIN' ? 'admin' : 'feed');
+    setCurrentView(user.role === 'ADMIN' ? 'admin' : 'home');
     showToast(`Welcome back, ${user.fullName}!`, 'success');
   }
 
@@ -161,7 +162,7 @@ export default function App() {
     if (user.role === 'ADMIN') {
       setCurrentView('admin');
     } else if (currentView === 'admin') {
-      setCurrentView('feed');
+      setCurrentView('home');
     }
   }
 
@@ -261,8 +262,9 @@ export default function App() {
 
       {/* Main Content Router */}
       <main className="content-wrapper">
-        {currentView === 'feed' && (
+        {(currentView === 'home' || currentView === 'lost' || currentView === 'found' || currentView === 'feed') && (
           <FeedView
+            currentView={currentView === 'feed' ? 'home' : currentView}
             items={items}
             stats={stats}
             matches={matches}
@@ -275,17 +277,18 @@ export default function App() {
           />
         )}
 
-        {currentView === 'report' && (
+        {(currentView === 'report' || currentView === 'report-lost' || currentView === 'report-found') && (
           <ReportView
             currentUser={currentUser}
+            initialType={currentView === 'report-found' ? 'FOUND' : 'LOST'}
             onReportSubmitted={(newItem) => {
               showToast(`Report published! Item ID: #${newItem.itemId}`, 'success');
               loadItems();
               loadUserActivity();
               loadStats();
-              setCurrentView('feed');
+              setCurrentView(newItem.reportType === 'FOUND' ? 'found' : 'lost');
             }}
-            onCancel={() => setCurrentView('feed')}
+            onCancel={() => setCurrentView('home')}
           />
         )}
 
@@ -313,6 +316,9 @@ export default function App() {
           />
         )}
       </main>
+
+      {/* Global Figma 4-Column Footer */}
+      <Footer onSwitchView={setCurrentView} />
 
       {/* Modals */}
       {claimTargetItem && (

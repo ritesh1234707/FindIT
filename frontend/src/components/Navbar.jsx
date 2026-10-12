@@ -1,97 +1,129 @@
 import React from 'react';
-import { Search, PlusCircle, Zap, FileText, Shield, LogOut } from 'lucide-react';
+import { Package, LogOut, Sparkles } from 'lucide-react';
 
 export default function Navbar({
   currentView,
   onSwitchView,
-  users,
+  users = [],
   currentUser,
   onSelectUser,
   stats,
   onLogout
 }) {
   return (
-    <header className="navbar">
-      {/* Brand Logo matching Reunited. style */}
-      <div className="nav-left">
-        <div className="brand" onClick={() => onSwitchView('feed')}>
-          <span className="brand-wordmark">FindIT<span className="brand-dot">.</span></span>
+    <header className="figma-navbar">
+      {/* Brand: I FOUND with Box Icon & Tagline */}
+      <div className="figma-nav-left" onClick={() => onSwitchView('home')}>
+        <div className="figma-logo-box">
+          <span className="box-emoji" role="img" aria-label="Lost & Found Box">📦</span>
+          <span className="umbrella-emoji" role="img" aria-label="Umbrella">☂️</span>
+        </div>
+        <div className="figma-brand-text">
+          <div className="brand-title">I FOUND</div>
+          <div className="brand-tagline">Discover. Connect. Reclaim.</div>
         </div>
       </div>
 
-      {/* Clean Nav Links */}
-      <nav className="nav-center">
+      {/* Center Nav Links matching Figma */}
+      <nav className="figma-nav-center">
         <button
-          className={`nav-link ${currentView === 'feed' ? 'active' : ''}`}
-          onClick={() => onSwitchView('feed')}
+          type="button"
+          className={`figma-nav-btn ${currentView === 'home' ? 'active' : ''}`}
+          onClick={() => onSwitchView('home')}
         >
-          Search Items
+          Home
         </button>
 
         <button
-          className={`nav-link ${currentView === 'report' ? 'active' : ''}`}
-          onClick={() => onSwitchView('report')}
+          type="button"
+          className={`figma-nav-btn ${currentView === 'lost' ? 'active' : ''}`}
+          onClick={() => onSwitchView('lost')}
         >
-          Report Item
+          Lost
         </button>
 
         <button
-          className={`nav-link ${currentView === 'matches' ? 'active' : ''}`}
-          onClick={() => onSwitchView('matches')}
+          type="button"
+          className={`figma-nav-btn ${currentView === 'report-lost' ? 'active' : ''}`}
+          onClick={() => onSwitchView('report-lost')}
         >
-          Smart Matches
+          Report Lost
         </button>
 
         <button
-          className={`nav-link ${currentView === 'my-items' ? 'active' : ''}`}
+          type="button"
+          className={`figma-nav-btn ${currentView === 'found' ? 'active' : ''}`}
+          onClick={() => onSwitchView('found')}
+        >
+          Found
+        </button>
+
+        <button
+          type="button"
+          className={`figma-nav-btn ${currentView === 'report-found' ? 'active' : ''}`}
+          onClick={() => onSwitchView('report-found')}
+        >
+          Report Found
+        </button>
+
+        <button
+          type="button"
+          className={`figma-nav-btn ${currentView === 'my-items' ? 'active' : ''}`}
           onClick={() => onSwitchView('my-items')}
         >
-          Claim Log
+          Profile
+        </button>
+
+        <button
+          type="button"
+          className={`figma-nav-btn ${currentView === 'matches' ? 'active' : ''}`}
+          onClick={() => onSwitchView('matches')}
+        >
+          Matches
         </button>
 
         {currentUser?.role === 'ADMIN' && (
           <button
-            className={`nav-link ${currentView === 'admin' ? 'active' : ''}`}
+            type="button"
+            className={`figma-nav-btn ${currentView === 'admin' ? 'active' : ''}`}
             onClick={() => onSwitchView('admin')}
           >
-            Admin Hub
+            Admin
           </button>
         )}
       </nav>
 
-      {/* Right: Clean profile & demo switch */}
-      <div className="nav-right">
-        <div className="demo-switch-wrap">
-          <select
-            className="clean-select demo-select"
-            value={currentUser?.userId || ''}
-            onChange={(e) => {
-              const selected = users.find(u => u.userId === parseInt(e.target.value));
-              if (selected) onSelectUser(selected);
-            }}
-            title="Switch demo account"
-          >
-            {users.map(u => (
-              <option key={u.userId} value={u.userId}>
-                {u.fullName.split(' ')[0]} ({u.role})
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="user-pill">
-          <span className="user-name">{currentUser?.fullName?.split(' ')[0] || 'User'}</span>
-        </div>
+      {/* Right Controls: Account Demo Switcher & Sign Out */}
+      <div className="figma-nav-right">
+        {users.length > 0 && (
+          <div className="demo-switch-wrap">
+            <select
+              className="clean-select demo-select"
+              value={currentUser?.userId || ''}
+              onChange={(e) => {
+                const selected = users.find(u => u.userId === parseInt(e.target.value));
+                if (selected) onSelectUser(selected);
+              }}
+              title="Switch demo account"
+            >
+              {users.map(u => (
+                <option key={u.userId} value={u.userId}>
+                  {u.fullName.split(' ')[0]} ({u.role})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <button
           type="button"
-          className="btn-ghost-logout"
+          className="figma-signout-btn"
           onClick={onLogout}
-          title="Sign Out"
         >
-          <LogOut size={15} />
+          Sign Out
         </button>
       </div>
     </header>
   );
 }
+

@@ -4,9 +4,16 @@ import { Send, MapPin } from 'lucide-react';
 export default function ReportView({
   currentUser,
   onReportSubmitted,
-  onCancel
+  onCancel,
+  initialType = 'LOST'
 }) {
-  const [reportType, setReportType] = useState('LOST');
+  const [reportType, setReportType] = useState(initialType);
+
+  React.useEffect(() => {
+    if (initialType) {
+      setReportType(initialType);
+    }
+  }, [initialType]);
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [color, setColor] = useState('');
