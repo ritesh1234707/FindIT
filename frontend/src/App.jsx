@@ -25,7 +25,7 @@ export default function App() {
     return currentUser?.role === 'ADMIN' ? 'admin' : 'home';
   });
 
-  const [users, setUsers] = useState([]);
+
   const [items, setItems] = useState([]);
   const [matches, setMatches] = useState([]);
   const [myItems, setMyItems] = useState([]);
@@ -48,21 +48,14 @@ export default function App() {
     }, 3500);
   }
 
-  // 1. Initial Load: Users & Global Stats
+  // 1. Initial Load: Global Stats
   useEffect(() => {
     async function init() {
       try {
-        const [usersRes, statsRes] = await Promise.all([
-          fetch('/api/auth/users').then(r => r.json()),
-          fetch('/api/dashboard/stats').then(r => r.json())
-        ]);
-
-        if (usersRes.users) {
-          setUsers(usersRes.users);
-        }
-
-        if (statsRes.stats) {
-          setStats(statsRes.stats);
+        const res = await fetch('/api/dashboard/stats');
+        const data = await res.json();
+        if (data.stats) {
+          setStats(data.stats);
         }
       } catch (err) {
         console.error('Init error:', err);
@@ -155,16 +148,7 @@ export default function App() {
     showToast('Signed out successfully.', 'info');
   }
 
-  function handleSelectUser(user) {
-    setCurrentUser(user);
-    localStorage.setItem('findit_user', JSON.stringify(user));
-    showToast(`Switched account to: ${user.fullName} (${user.role})`, 'success');
-    if (user.role === 'ADMIN') {
-      setCurrentView('admin');
-    } else if (currentView === 'admin') {
-      setCurrentView('home');
-    }
-  }
+
 
   async function handleRecalculateMatches() {
     showToast('Recalculating matches across all items...', 'info');
@@ -253,10 +237,7 @@ export default function App() {
       <Navbar
         currentView={currentView}
         onSwitchView={setCurrentView}
-        users={users}
         currentUser={currentUser}
-        onSelectUser={handleSelectUser}
-        stats={stats}
         onLogout={handleLogout}
       />
 

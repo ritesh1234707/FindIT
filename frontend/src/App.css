@@ -1512,6 +1512,29 @@
   border-color: #A1A1AA;
 }
 
+/* User Info Display */
+.figma-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+.figma-user-name {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #18181B;
+}
+
+.figma-user-role {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #71717A;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 /* ── Page Canvas with Subtle Figma Gradient ──────────────────── */
 .figma-page-canvas {
   min-height: calc(100vh - 160px);
