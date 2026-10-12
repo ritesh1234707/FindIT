@@ -12,14 +12,14 @@ WORKDIR /app
 COPY pom.xml ./
 RUN mvn dependency:go-offline -B || true
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests && cp target/findit-1.0.0.jar target/app.jar
 
 # ── Stage 3: Minimal JRE Runtime ──
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Copy compiled shaded JAR and React build assets
-COPY --from=backend-builder /app/target/findit-1.0.0-shaded.jar ./app.jar
+# Copy compiled JAR and React build assets
+COPY --from=backend-builder /app/target/app.jar ./app.jar
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
 ENV PORT=8080
