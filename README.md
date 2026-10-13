@@ -2,6 +2,17 @@
 
 > A modern, full-stack campus recovery platform combining a **Java REST API backend**, **MySQL database**, and a **Vite + React frontend** with automated heuristic matching.
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-findit--rhx4.onrender.com-00C7B7?style=for-the-badge&logo=render&logoColor=white)](https://findit-rhx4.onrender.com/)
+[![Database](https://img.shields.io/badge/Cloud%20MySQL-Aiven-FF4D4D?style=for-the-badge&logo=mysql&logoColor=white)](https://aiven.io/)
+
+🌐 **Live Application URL:** **[https://findit-rhx4.onrender.com/](https://findit-rhx4.onrender.com/)**
+
+---
+
+### 🚀 Try It Live
+* **Admin Portal:** Email: `admin@findit.com` (or username `admin`) | Password: `Admin@123`
+* **Student Portal:** Email: `ritesh@college.edu` | Password: `Student@123`
+
 ---
 
 ## 🌟 Overview
@@ -92,7 +103,7 @@ npm run dev
 | **Student** | `priya@college.edu` | `Student@123` | Student portal |
 | **Admin** | `admin@findit.com` | `Admin@123` | Admin Hub, Live Statistics, Approve/Reject Claim Verifications |
 
-*Tip: You can also use the **Demo Switch** dropdown in the navigation bar to switch between accounts in one click.*
+*Tip: Use the dedicated **Student Login** or **Admin Portal** buttons in the authentication screen to test role-specific workflows.*
 
 ---
 
